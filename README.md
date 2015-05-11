@@ -2,8 +2,8 @@
 1. clone repo
 1. cd into repo
 1. setup virtualenv and install python packages (http://flask.pocoo.org/docs/0.10/installation/)
+1. install and setup mysql I used the latest dmg from the official site (https://dev.mysql.com/downloads/mysql/)
 1. also install MySQL-python, and Flask-Restless (I used pip)
-1. setup mysql
 1. create user fossil_finder with password 'development'
  - mysql> REATE USER 'fossil_finder'@'localhost' IDENTIFIED BY 'development';
 1. import db file as fossil_finder db
