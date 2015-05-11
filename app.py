@@ -5,8 +5,7 @@ import MySQLdb
 
 # Create the Flask application and the Flask-SQLAlchemy object.
 app = flask.Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://fossil_finder:development@localhost:3306/fossil_finder'
+app.config.from_object('config')
 db = flask.ext.sqlalchemy.SQLAlchemy(app)
 
 # Create your Flask-SQLALchemy models as usual but with the following two
@@ -46,7 +45,8 @@ manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 # default. Allowed HTTP methods can be specified as well.
 # manager.create_api(Person, methods=['GET', 'POST', 'DELETE'])
 # manager.create_api(Computer, methods=['GET'])
-manager.create_api(Img_fossil_project, methods=['GET'])
+manager.create_api(Img_fossil_project, methods=['GET'], collection_name='images')
 
 # start the flask loop
-app.run()
+if __name__ == '__main__':
+    app.run()
