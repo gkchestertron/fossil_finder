@@ -9,6 +9,7 @@ app = flask.Flask(__name__)
 app.config.from_object('config')
 db = flask.ext.sqlalchemy.SQLAlchemy(app)
 
+
 # Create the Flask-Restless API manager.
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 
