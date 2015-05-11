@@ -5,7 +5,7 @@
 1. install and setup mysql I used the latest dmg from the official site (https://dev.mysql.com/downloads/mysql/)
 1. also install MySQL-python, and Flask-Restless (I used pip)
 1. create user fossil_finder with password 'development'
- - mysql> REATE USER 'fossil_finder'@'localhost' IDENTIFIED BY 'development';
+ - mysql> CREATE USER 'fossil_finder'@'localhost' IDENTIFIED BY 'development';
 1. import db file as fossil_finder db
  - $ mysql -u username -p database_name < path_to_project_folder/img_fossil_project_20150507.sql
 1. grant privileges to user on fossil_finder db
