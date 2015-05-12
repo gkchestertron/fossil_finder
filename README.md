@@ -1,4 +1,6 @@
 ## For Development:
+These are the steps I followed to get my mac setup to run this project:
+
 1. clone repo
 1. cd into repo
 1. setup virtualenv and install python packages (http://flask.pocoo.org/docs/0.10/installation/)
