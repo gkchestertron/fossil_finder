@@ -2,10 +2,10 @@ import flask
 import static
 import api
 
-# Create the Flask application and the Flask-SQLAlchemy object.
+# Create the Flask application
 app = flask.Flask(__name__)
 
-# Register static blueprints
+# Register static blueprint
 app.register_blueprint(static.static)
 
 # Register api blueprints
