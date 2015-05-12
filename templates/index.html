@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/lib/jquery-1.11.3.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/lib/underscore.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/lib/backbone.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-3.3.4-dist/js/bootstrap.js') }}"></script>
+        {% assets "js_all" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-3.3.4-dist/css/bootstrap.css') }}">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
     </head>
     <body>
         <div class="container">

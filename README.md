@@ -3,7 +3,7 @@
 1. cd into repo
 1. setup virtualenv and install python packages (http://flask.pocoo.org/docs/0.10/installation/)
 1. install and setup mysql I used the latest dmg from the official site (https://dev.mysql.com/downloads/mysql/)
-1. also install MySQL-python, Flask-Restless, and Flask-SQLAlchemy (I used pip)
+1. also install MySQL-python, Flask-Restless, Flask-SQLAlchemy, and Flask-Assets (I used pip)
 1. link the mysql library 
  - $ sudo ln -s /usr/local/mysql/lib/libmysqlclient.18.dylib /usr/lib/libmysqlclient.18.dylib
 1. create user fossil_finder with password 'development' (do as root)
