@@ -18,6 +18,7 @@ js = Bundle(
     'js/data/images.js',
     'js/data/templates.js',
     'js/views/base.js',
+    'js/views/finder.js',
     'js/router.js',
     output='build/packed.js'
 )

@@ -3,17 +3,24 @@ window.ff = {
     Collections: {},
     Views: {},
     initialize: function() {
-        // create the things here
+        var self = this;
+
+        this.router    = new this.Router();
         this.templates = new this.Models.Templates();
 
-        this.templates.fetch();
+        this.templates.fetch({
+            success: function () {
+                // starting the history here ensures we have templates 
+                // before doing any rendering of the things
+                Backbone.history.start({ pushState: true });
+            }
+        });
     }
 };
 
 
 $(document).ready(function() {
     ff.initialize();
-    Backbone.history.start({ pushState: true });
     // $('#current-user').remove();
     // ff.admin = !!(ff.current_user && ff.current_user.admin);
 
