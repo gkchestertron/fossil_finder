@@ -5,8 +5,12 @@ window.ff = {
     initialize: function() {
         var self = this;
 
+        // initial dependencies
         this.router    = new this.Router();
         this.templates = new this.Models.Templates();
+
+        // collections
+        this.images = new this.Collections.Images
 
         this.templates.fetch({
             success: function () {

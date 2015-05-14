@@ -7,6 +7,7 @@ from flask.ext.assets import Environment, Bundle
 app = flask.Flask(__name__)
 
 # register assets - any new js must go in here
+# TODO automate finding the files in the tree
 assets = Environment(app)
 js = Bundle(
     'js/lib/jquery-1.11.3.js', 

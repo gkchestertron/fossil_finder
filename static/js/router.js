@@ -1,11 +1,17 @@
 ff.Router = Backbone.Router.extend({
     finder: function () {
-        // TODO connect to images
-        var view = new ff.Views.Finder({
-            model: new ff.Models.Image({ href: 'http://calphotos.berkeley.edu/imgs/zoomucmp/0000_0000/0314/0199.jpeg' })
+        var self = this;
+        
+        ff.images.fetch({
+            success: function () {
+                var view = new ff.Views.Finder({
+                        model: ff.images.first()
+                    });
+
+                self._swapView(view);
+            }
         });
 
-        this._swapView(view);
     },
     initialize: function () {
         this.$rootEl = $('#app');
