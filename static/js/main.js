@@ -4,6 +4,9 @@ window.ff = {
     Views: {},
     initialize: function() {
         // create the things here
+        this.templates = new this.Models.Templates();
+
+        this.templates.fetch();
     }
 };
 

@@ -14,6 +14,11 @@ class Img_fossil_project(db.Model):
     collectn = db.Column(db.String(16))
     kwid     = db.Column(db.String(19))
 
+    def href(self):
+        split = self.kwid.split(' ')
+        href = 'http://calphotos.berkeley.edu/imgs/zoomucmp/%s_%s/%s/%s.jpeg' % (split[0], split[1], split[2], split[3])
+        return href
+
 # class for fossil finder image references
 
 # class for fossil finder image tags

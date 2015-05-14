@@ -14,4 +14,4 @@ db = flask.ext.sqlalchemy.SQLAlchemy(app)
 api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 
 # Create API endpoints, which will be available at /api/<tablename> by
-images = api_manager.create_api_blueprint(models.Img_fossil_project, methods=['GET'], collection_name='images')
+images = api_manager.create_api_blueprint(models.Img_fossil_project, methods=['GET'], collection_name='images', include_methods=['href'])
