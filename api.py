@@ -15,3 +15,4 @@ api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 
 # Create API endpoints, which will be available at /api/<tablename> by
 images = api_manager.create_api_blueprint(models.Img_fossil_project, methods=['GET'], collection_name='images', include_methods=['href'])
+categories = api_manager.create_api_blueprint(models.Fossil_finder_img_tag_categories, methods=['GET'], collection_name='categories')
