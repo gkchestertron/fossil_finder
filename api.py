@@ -1,3 +1,5 @@
+# TODO add custom getter for refs
+# TODO add auth and block access based on auth level
 import flask
 import flask.ext.sqlalchemy
 import flask.ext.restless
@@ -10,9 +12,19 @@ app = flask.Flask(__name__)
 app.config.from_object('config')
 db = flask.ext.sqlalchemy.SQLAlchemy(app)
 
+# preprocessors
+def refs_get_many_preprocessor(search_params=None, **kw):
+    img = models.Img.query.filter(models.Img.ref == None).first()
+    ref = models.Ref(seq_num = img.seq_num)
+    models.db.session.add(ref)
+    models.db.session.commit()
+    search_params['filters'] = [{ 'name': 'id', 'op': 'eq', 'val': ref.id }]
+    models.db.session.close_all()
+
 # Create the Flask-Restless API manager.
 api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 
 # Create API endpoints, which will be available at /api/<tablename> by
-images = api_manager.create_api_blueprint(models.Img_fossil_project, methods=['GET'], collection_name='images', include_methods=['href'])
-categories = api_manager.create_api_blueprint(models.Fossil_finder_img_tag_categories, methods=['GET'], collection_name='categories')
+images = api_manager.create_api_blueprint(models.Img, methods=['GET'], collection_name='images', include_methods=['href'])
+categories = api_manager.create_api_blueprint(models.Category, methods=['GET'], collection_name='categories')
+refs = api_manager.create_api_blueprint(models.Ref, methods=['GET'], collection_name='refs', preprocessors = { 'GET_MANY': [refs_get_many_preprocessor] })
