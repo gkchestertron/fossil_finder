@@ -10,7 +10,7 @@ window.ff = {
         this.templates = new this.Models.Templates();
 
         // collections
-        this.images = new this.Collections.Images
+        this.refs = new this.Collections.Refs
 
         this.templates.fetch({
             success: function () {
@@ -19,6 +19,15 @@ window.ff = {
                 Backbone.history.start({ pushState: true });
             }
         });
+    },
+    min: function (values) {
+        var min = values [0];
+
+        for (var i = 1; i < values.length; i++) {
+            if (values[i] < min) min = values[i];
+        }
+
+        return min;
     }
 };
 

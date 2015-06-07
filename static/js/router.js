@@ -2,16 +2,15 @@ ff.Router = Backbone.Router.extend({
     finder: function () {
         var self = this;
         
-        ff.images.fetch({
+        ff.refs.fetch({
             success: function () {
                 var view = new ff.Views.Finder({
-                        model: ff.images.first()
+                        model: ff.refs.first()
                     });
 
                 self._swapView(view);
             }
         });
-
     },
     initialize: function () {
         this.$rootEl = $('#app');

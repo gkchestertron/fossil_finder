@@ -16,7 +16,8 @@ js = Bundle(
     'bootstrap-3.3.4-dist/js/bootstrap.js',
     'js/main.js',
     'js/data/base.js',
-    'js/data/images.js',
+    'js/data/refs.js',
+    'js/data/tags.js',
     'js/data/templates.js',
     'js/views/base.js',
     'js/views/finder.js',
@@ -29,9 +30,9 @@ assets.register('js_all', js)
 app.register_blueprint(static.static)
 
 # Register api blueprints
-app.register_blueprint(api.images)
 app.register_blueprint(api.refs)
 app.register_blueprint(api.categories)
+app.register_blueprint(api.tags)
 
 # start the flask loop
 if __name__ == '__main__':

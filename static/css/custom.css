@@ -1,0 +1,17 @@
+#app {
+    margin-top: 67px;
+}
+
+#current-image {
+    width: 100%;
+}
+
+#current-image-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.tag {
+    border: 1px solid white;
+    position: absolute;
+}

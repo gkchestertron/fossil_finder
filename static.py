@@ -20,7 +20,7 @@ def templates():
     """
     templates need to have a .html extension
     """
-    predicate = re.compile('.*html')
+    predicate = re.compile('.*html$')
     files     = [f for f in os.listdir('./static/js/templates/') if predicate.match(f)]
     response  = {}
     
