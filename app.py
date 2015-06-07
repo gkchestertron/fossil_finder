@@ -18,6 +18,7 @@ js = Bundle(
     'js/data/base.js',
     'js/data/refs.js',
     'js/data/tags.js',
+    'js/data/categories.js',
     'js/data/templates.js',
     'js/views/base.js',
     'js/views/finder.js',

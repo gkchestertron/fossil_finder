@@ -46,6 +46,6 @@ refs = api_manager.create_api_blueprint(
 
 tags = api_manager.create_api_blueprint(
     models.Tag,
-    methods=['GET', 'POST'],
+    methods=['GET', 'POST', 'PUT', 'DELETE'],
     collection_name='tags',
     results_per_page=None)

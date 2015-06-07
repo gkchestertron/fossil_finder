@@ -10,8 +10,10 @@ window.ff = {
         this.templates = new this.Models.Templates();
 
         // collections
-        this.refs = new this.Collections.Refs
+        this.refs = new this.Collections.Refs();
+        this.categories = new this.Collections.Categories();
 
+        this.categories.fetch();
         this.templates.fetch({
             success: function () {
                 // starting the history here ensures we have templates 
