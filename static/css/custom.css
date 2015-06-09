@@ -16,9 +16,28 @@
     padding: 0px;
 }
 
+.icon-flipped {
+    transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
+}
+
 .tag {
     top: 0;
     left: 0;
     border: 1px solid white;
     position: absolute;
+}
+
+ .resizer {
+    color: white;
+    margin: 3px;
+}
+
+.resizer-wrapper {
+    bottom: 0px;
+    position: absolute;
+    text-align: right;
+    width: 100%;
 }

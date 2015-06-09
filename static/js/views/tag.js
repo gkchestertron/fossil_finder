@@ -14,8 +14,6 @@ ff.Views.Tag = ff.Views.Base.extend({
             offset      = self.getElementPosition(self.$el),
             offsetStart = { top: event.pageY, left: event.pageX };
 
-        console.log(offset, this.$el.css('top'), this.$el.css('left'), this.$el.width(), this.$el.height());
-
         event.preventDefault();
         this.parent.$el.on('mousemove', function (event) {
             var offsetDrag = { top: event.pageY, left: event.pageX },
