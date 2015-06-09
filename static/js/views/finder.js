@@ -81,6 +81,7 @@ ff.Views.Finder = ff.Views.Base.extend({
         // set finder area height to hide overflow when zooming
         this.finderWidth  = $('#current-image').width();
         this.finderHeight = $('#current-image').height();
+        $('#fossil-finder').width(this.finderWidth);
         $('#fossil-finder').height(this.finderHeight);
 
         this.setScale();
