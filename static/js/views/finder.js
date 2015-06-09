@@ -97,17 +97,17 @@ ff.Views.Finder = ff.Views.Base.extend({
 
     zoom: function (event) {
         var $imageWrapper = $(event.currentTarget),
-            delta         = event.originalEvent.wheelDelta * -1,
+            delta         = event.originalEvent.wheelDeltaY * -1,
             width         = $imageWrapper.width() + delta,
             offsetStart   = this.getRelativeOffset(event, $('#current-image-wrapper'), this.scale),
             offsetEnd, offsetDiff, diff;
 
         event.preventDefault();
 
-        if (width > this.finderWidth && width < this.initialImageWidth) {
+        if (width >= this.finderWidth && width <= this.initialImageWidth) {
             $imageWrapper.width(width);
         }
-        else if (width > this.initialImageWidth) {
+        else if (width >= this.initialImageWidth) {
             $imageWrapper.width(this.initialImageWidth);
         }
         else {
@@ -130,7 +130,7 @@ ff.Views.Finder = ff.Views.Base.extend({
     zoomNav: function (event) {
         var self   = this,
             offset = this.getRelativeOffset(event, $('#fossil-finder')),
-            diff   = this.finderWidth/5,
+            diff   = this.finderWidth/9,
             x      = 0, 
             y      = 0;
 
@@ -149,7 +149,7 @@ ff.Views.Finder = ff.Views.Base.extend({
             }
             this.interval = this.interval || setInterval(function () {
                 self.intervalCallback();
-            }, 10);
+            }, 9);
         }
         
     }
