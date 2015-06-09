@@ -35,6 +35,7 @@ ff.Views.Finder = ff.Views.Base.extend({
             offsetStart = this.getRelativeOffset(event, $('#current-image')),
             $div        = $('<div class="tag"></div>');
 
+        event.preventDefault();
         $('#current-image-wrapper').append($div);
         this.$el.on('mousemove', function (event) {
             var offsetDrag = self.getRelativeOffset(event, $('#current-image-wrapper')),
