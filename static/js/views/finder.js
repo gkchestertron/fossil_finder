@@ -6,14 +6,17 @@ ff.Views.Finder = ff.Views.Base.extend({
         tagView.render();
     },
 
-    moveImage: function (diff) {
-        var $imageWrapper = $('#current-image-wrapper'),
-            top = $imageWrapper.css('top'),
-            left = $imageWrapper.css('left'),
+    moveElement: function (diff, $element, delta) {
+        var top = $element.css('top'),
+            left = $element.css('left'),
+            props = diff;
+            
+        if (delta) {
             props = {
                 top  :  parseInt(top.slice(0, top.length - 2))  - diff.top,
                 left :  parseInt(left.slice(0, left.length - 2))  - diff.left
             };
+        }
 
         if (props.left > 0) props.left = 0;
         if (props.top > 0) props.top = 0;
@@ -24,7 +27,7 @@ ff.Views.Finder = ff.Views.Base.extend({
             props.top = this.finderHeight - this.currentImageHeight;
         }
 
-        $imageWrapper.css(props);
+        $element.css(props);
     },
 
     drawNewTag: function (event) {
@@ -35,14 +38,14 @@ ff.Views.Finder = ff.Views.Base.extend({
         $('#current-image-wrapper').append($div);
         this.$el.on('mousemove', function (event) {
             var offsetDrag = self.getRelativeOffset(event, $('#current-image-wrapper')),
-                props      = self.getOffsetDiff(offsetStart, offsetDrag);
+                props      = self.getBox(offsetStart, offsetDrag);
 
             $div.css(props);
         });
 
         $(window).one('mouseup', function (event) {
             var offsetEnd = self.getRelativeOffset(event, $('#current-image-wrapper')),
-                props     = self.getOffsetDiff(offsetStart, offsetEnd, self.scale),
+                props     = self.getBox(offsetStart, offsetEnd, self.scale),
                 tagModel  = new ff.Models.Tag(props);
 
             $div.remove();
@@ -53,7 +56,7 @@ ff.Views.Finder = ff.Views.Base.extend({
 
     drawTags: function () {
         for (var i in this.tags) {
-            this.tags[i].resize();
+            this.tags[i].scale();
         }
     },
 
@@ -123,7 +126,7 @@ ff.Views.Finder = ff.Views.Base.extend({
             left  : -(offsetEnd.left - offsetStart.left)  * this.scale
         };
 
-        this.moveImage(diff);
+        this.moveElement(diff, $('#current-image-wrapper'), true);
         this.drawTags();
     },
 
@@ -145,7 +148,7 @@ ff.Views.Finder = ff.Views.Base.extend({
         } 
         else {
             this.intervalCallback = function () {
-                self.moveImage({ top: y, left: x });
+                self.moveElement({ top: y, left: x }, $('#current-image-wrapper'), true);
             }
             this.interval = this.interval || setInterval(function () {
                 self.intervalCallback();
