@@ -58,7 +58,7 @@ ff.Views.Finder = ff.Views.Base.extend({
     },
 
     events: {
-        'mousewheel #current-image-wrapper': 'zoom',
+        'wheel #current-image-wrapper': 'zoom',
         'mousedown #current-image' : 'drawNewTag', // uses image so click events don't bubble up and make new tags inside tags
         'mousemove #current-image-wrapper' : 'zoomNav'
     },
@@ -97,9 +97,9 @@ ff.Views.Finder = ff.Views.Base.extend({
 
     zoom: function (event) {
         var $imageWrapper = $(event.currentTarget),
-            delta         = event.originalEvent.wheelDeltaY * -1,
+            delta         = event.originalEvent.deltaY,
             width         = $imageWrapper.width() + delta,
-            offsetStart   = this.getRelativeOffset(event, $('#current-image-wrapper'), this.scale),
+            offsetStart   = this.getRelativeOffset(event.originalEvent, $('#current-image-wrapper'), this.scale),
             offsetEnd, offsetDiff, diff;
 
         event.preventDefault();
@@ -116,7 +116,7 @@ ff.Views.Finder = ff.Views.Base.extend({
 
         this.setScale();
 
-        offsetEnd  = this.getRelativeOffset(event, $('#current-image-wrapper'), this.scale),
+        offsetEnd  = this.getRelativeOffset(event.originalEvent, $('#current-image-wrapper'), this.scale),
 
         diff = {
             top   : -(offsetEnd.top - offsetStart.top)  * this.scale,
