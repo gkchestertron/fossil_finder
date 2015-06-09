@@ -47,7 +47,7 @@ ff.Views.Finder = ff.Views.Base.extend({
 
             $div.remove();
             self.addTag(tagModel);
-            self.$el.off('mousemove');
+            self.$el.off('mousemove', self.$el);
         });
     },
 
@@ -59,7 +59,8 @@ ff.Views.Finder = ff.Views.Base.extend({
 
     events: {
         'mousewheel #current-image-wrapper': 'zoom',
-        'mousedown #current-image': 'drawNewTag'
+        'mousedown #current-image' : 'drawNewTag', // uses image so click events don't bubble up and make new tags inside tags
+        'mousemove #current-image-wrapper' : 'zoomNav'
     },
 
     initialize: function () {
@@ -124,5 +125,32 @@ ff.Views.Finder = ff.Views.Base.extend({
 
         this.moveImage(diff);
         this.drawTags();
+    },
+
+    zoomNav: function (event) {
+        var self   = this,
+            offset = this.getRelativeOffset(event, $('#fossil-finder')),
+            diff   = this.finderWidth/5,
+            x      = 0, 
+            y      = 0;
+
+        if (offset.top < diff) y = -10;
+        if (offset.top > (this.finderHeight - diff)) y = 10;
+        if (offset.left < diff) x = -10;
+        if (offset.left > (this.finderWidth - diff)) x = 10;
+        
+        if (x === 0 && y === 0) {
+            clearInterval(this.interval);
+            delete this.interval;
+        } 
+        else {
+            this.intervalCallback = function () {
+                self.moveImage({ top: y, left: x });
+            }
+            this.interval = this.interval || setInterval(function () {
+                self.intervalCallback();
+            }, 10);
+        }
+        
     }
 });
