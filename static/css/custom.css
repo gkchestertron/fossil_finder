@@ -3,12 +3,16 @@
 }
 
 #current-image {
-    width: 100%;
 }
 
 #current-image-wrapper {
-    overflow: hidden;
     position: relative;
+    top: 0;
+    left: 0;
+}
+
+#fossil-finder {
+    overflow: hidden;
 }
 
 .tag {
