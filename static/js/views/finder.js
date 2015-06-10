@@ -63,16 +63,13 @@ ff.Views.Finder = ff.Views.Base.extend({
     },
 
     initialize: function () {
-        var self = this;
-
         this.listenTo(this.model.get('tags'), 'error', function () {
             alert('Something went wrong. Please try again. If the problem persists, please try again later.');
         });
 
         this.tags = [];
-        $(window).on('resize', function () {
-            self.resize();
-        });
+
+        $(window).on('resize', this.resize.bind(this));
     },
 
     moveElement: function (diff, $element, delta) {
@@ -113,33 +110,35 @@ ff.Views.Finder = ff.Views.Base.extend({
 
         this.$el.html(_.template(ff.templates.get('finder'))(self.model.attributes));
 
-        // get initial height for setting scale
-        this.initialImageWidth  = $('#current-image').width();
-        this.initialImageHeight = $('#current-image').height();
+        $('#current-image').one('load', function () {
+            // get initial height for setting scale
+            self.initialImageWidth  = $('#current-image').width();
+            self.initialImageHeight = $('#current-image').height();
 
-        // shrink to fit
-        $('#current-image').css({ width: '100%' });
-        
-        // set finder area height to hide overflow when zooming
-        $('#app').css({ 'margin-top': $('nav').height() });
-        this.finderWidth  = $('#current-image').width();
-        this.finderHeight = $(window).height() - $('nav').height();
-        $('#fossil-finder').width(this.finderWidth);
-        $('#fossil-finder').height(this.finderHeight);
-        $('#inspector').height(this.finderHeight);
+            // shrink to fit
+            $('#current-image').css({ width: '100%' });
+            
+            // set finder area height to hide overflow when zooming
+            $('#app').css({ 'margin-top': $('nav').height() });
+            self.finderWidth  = $('#current-image').width();
+            self.finderHeight = $(window).height() - $('nav').height();
+            $('#fossil-finder').width(self.finderWidth);
+            $('#fossil-finder').height(self.finderHeight);
+            $('#inspector').height(self.finderHeight);
 
-        this.setScale();
+            self.setScale();
 
-        this.inspector = new ff.Views.Inspector({ 
-            el: $('#inspector'),
-            model: this.model,
-            parent: this
+            self.inspector = new ff.Views.Inspector({ 
+                el: $('#inspector'),
+                model: self.model,
+                parent: self
+            });
+
+            self.addTags();
+            self.drawTags();
+
+            self.inspector.render();
         });
-
-        this.addTags();
-        this.drawTags();
-
-        this.inspector.render();
     },
 
     resize: function () {
@@ -212,7 +211,11 @@ ff.Views.Finder = ff.Views.Base.extend({
                 self.intervalCallback();
             }, 9);
         }
-        
+
+        $('#fossil-finder').one('mouseleave', function () {
+            clearInterval(self.interval);
+            delete self.interval;
+        });
     }
 });
 
