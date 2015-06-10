@@ -30,7 +30,8 @@
 }
 
 #inspector {
-    height: 100%;
+    overflow-y: scroll;
+    margin-bottom: 0px;
 }
 
 .tag {

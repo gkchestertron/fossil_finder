@@ -102,6 +102,9 @@ ff.Views.Finder = ff.Views.Base.extend({
 
     remove: function () {
         this.inspector.remove();
+        for (var i in this.tags) {
+            this.tags[i].remove();
+        }
         Backbone.View.prototype.remove.apply(this, arguments);
     },
 
@@ -124,7 +127,7 @@ ff.Views.Finder = ff.Views.Base.extend({
             self.finderHeight = $(window).height() - $('nav').height();
             $('#fossil-finder').width(self.finderWidth);
             $('#fossil-finder').height(self.finderHeight);
-            $('#inspector').height(self.finderHeight);
+            $('#inspector').height(self.finderHeight - 40);
 
             self.setScale();
 
