@@ -71,5 +71,9 @@ ff.Views.Base = Backbone.View.extend({
         }
 
         return { top: top, left: left };
+    },
+
+    preventDefault: function (event) {
+        event.preventDefault();
     }
 });

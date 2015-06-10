@@ -1,0 +1,22 @@
+<h3>Tags</h3>
+<hr />
+<% tags.each(function (tag) { %>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <% var category = tag.get('category') %>
+            <div class="dropdown">
+                <h3 class="panel-title dropdown-toggle" data-toggle="dropdown">category: <%= category && category.name || 'unspecified' %></h3>
+                <ul class="dropdown-menu">
+                    <% ff.categories.each(function (category) { %>
+                    <li><a data-category-id="<%= category.id %>" data-tag-id="<%= tag.id %>"><%= category.get('name') %></a></li>
+                    <% }) %>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="pull-right">
+                <button data-cid="<%= tag.cid %>" data-function="destroy" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+<% }) %>

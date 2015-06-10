@@ -10,7 +10,6 @@ import static
 # Grab reference to the Flask application and the Flask-SQLAlchemy object.
 app = flask.Flask(__name__)
 app.config.from_object('config')
-db = flask.ext.sqlalchemy.SQLAlchemy(app)
 
 # preprocessors
 def refs_get_many_preprocessor(search_params=None, **kw):
@@ -24,7 +23,7 @@ def refs_get_many_preprocessor(search_params=None, **kw):
     models.db.session.close_all()
 
 # Create the Flask-Restless API manager.
-api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=models.db)
 
 # Create API endpoints, which will be available at /api/<tablename> by
 # don't forget to register the blueprint in app.py

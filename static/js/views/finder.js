@@ -1,9 +1,74 @@
 ff.Views.Finder = ff.Views.Base.extend({
     addTag: function (tagModel) {
-        var tagView = new ff.Views.Tag({ model: tagModel, parent: this });
+        var tagView = new ff.Views.Tag({ model: tagModel, parent: this }),
+            tagCollection = this.model.get('tags');
 
+        tagCollection.add(tagModel);
         this.tags.push(tagView);
         tagView.render();
+        this.inspector.render();
+    },
+
+    addTags: function () {
+        var self = this,
+            tags = this.model.get('tags');
+
+        tags.each(function (tag) {
+            self.addTag(tag);
+        });
+    },
+
+    drawNewTag: function (event) {
+        var self        = this,
+            offsetStart = this.getRelativeOffset(event, $('#current-image')),
+            $div        = $('<div class="tag"></div>');
+
+        event.preventDefault();
+        $('#current-image-wrapper').append($div);
+        $div.css(offsetStart);
+        this.$el.on('mousemove', function (event) {
+            var offsetDrag = self.getRelativeOffset(event, $('#current-image-wrapper')),
+                props      = self.getBox(offsetStart, offsetDrag);
+
+            $div.css(props);
+        });
+
+        $(window).one('mouseup', function (event) {
+            var offsetEnd = self.getRelativeOffset(event, $('#current-image-wrapper')),
+                props     = self.getBox(offsetStart, offsetEnd, self.scale),
+                tagModel  = new ff.Models.Tag(props);
+
+            $div.remove();
+            tagModel.save({ 
+                img_ref_id: self.model.id 
+            }, {
+                success: function () {
+                    self.addTag(tagModel);
+                }
+            });
+            self.$el.off('mousemove', self.$el);
+        });
+    },
+
+    drawTags: function () {
+        for (var i in this.tags) {
+            this.tags[i].scale();
+        }
+    },
+
+    events: {
+        'wheel #current-image-wrapper': 'zoom',
+        'mousedown #current-image' : 'drawNewTag', // uses image so click events don't bubble up and make new tags inside tags
+        'mousemove #current-image-wrapper' : 'zoomNav'
+    },
+
+    initialize: function () {
+        var self = this;
+
+        this.tags = [];
+        $(window).on('resize', function () {
+            self.resize();
+        });
     },
 
     moveElement: function (diff, $element, delta) {
@@ -26,49 +91,17 @@ ff.Views.Finder = ff.Views.Base.extend({
         if ((props.top + this.currentImageHeight) < this.finderHeight) {
             props.top = this.finderHeight - this.currentImageHeight;
         }
+        if (this.currentImageHeight <= this.finderHeight) {
+            props.top = 0;
+        }
+
 
         $element.css(props);
     },
 
-    drawNewTag: function (event) {
-        var self        = this,
-            offsetStart = this.getRelativeOffset(event, $('#current-image')),
-            $div        = $('<div class="tag"></div>');
-
-        event.preventDefault();
-        $('#current-image-wrapper').append($div);
-        this.$el.on('mousemove', function (event) {
-            var offsetDrag = self.getRelativeOffset(event, $('#current-image-wrapper')),
-                props      = self.getBox(offsetStart, offsetDrag);
-
-            $div.css(props);
-        });
-
-        $(window).one('mouseup', function (event) {
-            var offsetEnd = self.getRelativeOffset(event, $('#current-image-wrapper')),
-                props     = self.getBox(offsetStart, offsetEnd, self.scale),
-                tagModel  = new ff.Models.Tag(props);
-
-            $div.remove();
-            self.addTag(tagModel);
-            self.$el.off('mousemove', self.$el);
-        });
-    },
-
-    drawTags: function () {
-        for (var i in this.tags) {
-            this.tags[i].scale();
-        }
-    },
-
-    events: {
-        'wheel #current-image-wrapper': 'zoom',
-        'mousedown #current-image' : 'drawNewTag', // uses image so click events don't bubble up and make new tags inside tags
-        'mousemove #current-image-wrapper' : 'zoomNav'
-    },
-
-    initialize: function () {
-        this.tags = [];
+    remove: function () {
+        this.inspector.remove();
+        Backbone.View.prototype.remove.apply(this, arguments);
     },
 
     render: function () {
@@ -84,13 +117,33 @@ ff.Views.Finder = ff.Views.Base.extend({
         $('#current-image').css({ width: '100%' });
         
         // set finder area height to hide overflow when zooming
+        $('#app').css({ 'margin-top': $('nav').height() });
         this.finderWidth  = $('#current-image').width();
-        this.finderHeight = $('#current-image').height();
+        this.finderHeight = $(window).height() - $('nav').height();
         $('#fossil-finder').width(this.finderWidth);
         $('#fossil-finder').height(this.finderHeight);
+        $('#inspector').height(this.finderHeight);
 
         this.setScale();
+
+        this.inspector = new ff.Views.Inspector({ 
+            el: $('#inspector'),
+            model: this.model,
+            parent: this
+        });
+
+        this.addTags();
         this.drawTags();
+
+        this.inspector.render();
+    },
+
+    resize: function () {
+        this.inspector.remove();
+        for (var i in this.tags) {
+            this.tags[i].remove();
+        }
+        this.render();
     },
 
     setScale: function () {
@@ -120,7 +173,7 @@ ff.Views.Finder = ff.Views.Base.extend({
 
         this.setScale();
 
-        offsetEnd  = this.getRelativeOffset(event.originalEvent, $('#current-image-wrapper'), this.scale),
+        offsetEnd  = this.getRelativeOffset(event.originalEvent, $('#current-image-wrapper'), this.scale);
 
         diff = {
             top   : -(offsetEnd.top - offsetStart.top)  * this.scale,
@@ -156,5 +209,49 @@ ff.Views.Finder = ff.Views.Base.extend({
             }, 9);
         }
         
+    }
+});
+
+ff.Views.Inspector = ff.Views.Base.extend({
+    destroy: function (event) {
+        var $button = $(event.currentTarget),
+            cid     = $button.data('cid'),
+            model   = this.model.get('tags').get(cid);
+
+        model.destroy();
+        this.render();
+    },
+
+    events: {
+        'click [data-function=destroy]': 'destroy',
+        'click [data-function=save]': 'save',
+        'click .dropdown a': 'setCategory'
+    },
+
+    render: function () {
+        this.$el.html(_.template(ff.templates.get('inspector'))(this.model.attributes));
+    },
+
+    save: function (event) {
+        var $button = $(event.currentTarget),
+            cid     = $button.data('cid'),
+            model   = this.model.get('tags').get(cid);
+
+        model.save();
+    },
+
+    setCategory: function (event) {
+        var self        = this,
+            $a          = $(event.currentTarget),
+            categoryId  = $a.data('category-id'),
+            tagId       = $a.data('tag-id'),
+            tag         = this.model.get('tags').get(tagId);
+
+        tag.save({ 
+            img_tag_category_id: categoryId
+        }, {
+            success: self.render.bind(self)
+        });
+
     }
 });

@@ -6,12 +6,18 @@
 }
 
 #current-image-wrapper {
+    cursor: default;
     position: relative;
     top: 0;
     left: 0;
 }
 
+.dropdown-toggle, .dropdown a {
+    cursor: pointer;
+}
+
 #fossil-finder {
+    cursor: default;
     overflow: hidden;
     padding: 0px;
 }
@@ -23,6 +29,10 @@
     -ms-transform: scaleX(-1);
 }
 
+#inspector {
+    height: 100%;
+}
+
 .tag {
     top: 0;
     left: 0;
@@ -30,14 +40,25 @@
     position: absolute;
 }
 
- .resizer {
+.resizer {
     color: white;
     margin: 3px;
+    cursor: default;
 }
 
 .resizer-wrapper {
+    cursor: default;
     bottom: 0px;
     position: absolute;
     text-align: right;
     width: 100%;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

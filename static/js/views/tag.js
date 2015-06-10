@@ -7,6 +7,7 @@ ff.Views.Tag = ff.Views.Base.extend({
     initialize: function (options) {
         this.parent = options.parent;
         this.setElement($('<div class="tag"></div>'));
+        this.listenTo(this.model, 'destroy', this.remove);
         $('#current-image-wrapper').append(this.$el);
     },
 
@@ -16,8 +17,7 @@ ff.Views.Tag = ff.Views.Base.extend({
             offset      = self.getElementPosition(self.$el),
             offsetStart = { top: event.pageY, left: event.pageX };
 
-        event.preventDefault();
-        $(window).on('mousemove', function (event) {
+        $('#fossil-finder').on('mousemove', function (event) {
             var offsetDrag = { top: event.pageY, left: event.pageX },
                 diff       = self.getOffsetDiff(offsetStart, offsetDrag),
                 props      = {
@@ -28,7 +28,7 @@ ff.Views.Tag = ff.Views.Base.extend({
             self.$el.css(props);
         });
 
-        $(window).one('mouseup', function (event) {
+        $('#fossil-finder').one('mouseup', function (event) {
             var offsetEnd = { top: event.pageY, left: event.pageX },
                 diff      = self.getOffsetDiff(offsetStart, offsetEnd),
                 props     = {
@@ -38,7 +38,8 @@ ff.Views.Tag = ff.Views.Base.extend({
 
             self.$el.css(props);
             self.model.set(self.getElementPosition(self.$el, self.parent.scale));
-            $(window).off('mousemove');
+            self.model.save();
+            $('#fossil-finder').off('mousemove');
         });       
     },
 
@@ -83,6 +84,7 @@ ff.Views.Tag = ff.Views.Base.extend({
             });
 
             self.model.set(self.getElementPosition(self.$el, self.parent.scale));
+            self.model.save();
             $(window).off('mousemove');
         });
     },
