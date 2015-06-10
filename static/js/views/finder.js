@@ -65,6 +65,10 @@ ff.Views.Finder = ff.Views.Base.extend({
     initialize: function () {
         var self = this;
 
+        this.listenTo(this.model.get('tags'), 'error', function () {
+            alert('Something went wrong. Please try again. If the problem persists, please try again later.');
+        });
+
         this.tags = [];
         $(window).on('resize', function () {
             self.resize();
