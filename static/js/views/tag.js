@@ -1,7 +1,8 @@
 ff.Views.Tag = ff.Views.Base.extend({
     events: {
         'mousedown .resizer': 'resize',
-        'mousedown': 'move'
+        'mousedown': 'move',
+        'click': 'setActive'
     },
 
     initialize: function (options) {
@@ -36,16 +37,26 @@ ff.Views.Tag = ff.Views.Base.extend({
                     left: offset.left + diff.left
                 };
 
-            self.$el.css(props);
-            self.model.set(self.getElementPosition(self.$el, self.parent.scale));
-            self.model.save();
+            if (Math.abs(diff.top) > 3 && Math.abs(diff.left) > 3) {
+                self.$el.css(props);
+                self.model.set({
+                    top: props.top / self.parent.scale,
+                    left: props.left / self.parent.scale
+                });
+                self.model.save();
+            }
             $('#fossil-finder').off('mousemove');
         });       
     },
 
     render: function () {
-        this.$el.html(_.template(ff.templates.get('tag'))(this.model.attributes));
+        this.$el.html(_.template(ff.templates.get('tag'))({ tag: this.model }));
         this.scale();
+        if (this.model.active) {
+            this.$el.addClass('active');
+        } else {
+            this.$el.removeClass('active');
+        }
     },
 
     resize: function (event) {
@@ -96,5 +107,10 @@ ff.Views.Tag = ff.Views.Base.extend({
             width:  this.model.get('width')  * this.parent.scale,
             height: this.model.get('height') * this.parent.scale
         });
+    },
+
+    setActive: function () {
+        this.model.active = true;
+        this.model.trigger('active-tag-set', this.model.cid);
     }
 });

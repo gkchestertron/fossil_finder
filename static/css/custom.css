@@ -1,3 +1,12 @@
+.active {
+    border-color: #fcf8e3 !important;
+    box-shadow: 0 0 10px #fcf8e3;
+}
+
+.active .resizer {
+    color: #fcf8e3;
+}
+
 #app {
     margin-top: 67px;
 }
@@ -34,13 +43,6 @@
     margin-bottom: 0px;
 }
 
-.tag {
-    top: 0;
-    left: 0;
-    border: 1px solid white;
-    position: absolute;
-}
-
 .resizer {
     color: white;
     margin: 3px;
@@ -53,6 +55,14 @@
     position: absolute;
     text-align: right;
     width: 100%;
+}
+
+.tag {
+    top: 0;
+    left: 0;
+    border: 1px solid white;
+    border-radius: 2px;
+    position: absolute;
 }
 
 .unselectable {

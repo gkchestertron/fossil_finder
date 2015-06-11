@@ -3,6 +3,7 @@ ff.Views.Finder = ff.Views.Base.extend({
         var tagView = new ff.Views.Tag({ model: tagModel, parent: this }),
             tagCollection = this.model.get('tags');
 
+        tagModel.view = tagView;
         tagCollection.add(tagModel);
         this.tags.push(tagView);
         tagView.render();
@@ -39,13 +40,18 @@ ff.Views.Finder = ff.Views.Base.extend({
                 tagModel  = new ff.Models.Tag(props);
 
             $div.remove();
-            tagModel.save({ 
-                img_ref_id: self.model.id 
-            }, {
-                success: function () {
-                    self.addTag(tagModel);
-                }
-            });
+
+            if (props.width > 3 && props.height > 3) {
+                tagModel.save({ 
+                    img_ref_id: self.model.id 
+                }, {
+                    success: function () {
+                        self.addTag(tagModel);
+                        tagModel.view.setActive();
+                    }
+                });
+            }
+
             self.$el.off('mousemove', self.$el);
         });
     },
@@ -228,6 +234,7 @@ ff.Views.Inspector = ff.Views.Base.extend({
             cid     = $button.data('cid'),
             model   = this.model.get('tags').get(cid);
 
+        event.stopPropagation();
         model.destroy();
         this.render();
     },
@@ -235,7 +242,12 @@ ff.Views.Inspector = ff.Views.Base.extend({
     events: {
         'click [data-function=destroy]': 'destroy',
         'click [data-function=save]': 'save',
-        'click .dropdown a': 'setCategory'
+        'click .dropdown a': 'setCategory',
+        'click tr': 'setActiveTag'
+    },
+
+    initialize: function () {
+        this.listenTo(this.model.get('tags'), 'active-tag-set', this.setActiveTag);
     },
 
     render: function () {
@@ -248,6 +260,38 @@ ff.Views.Inspector = ff.Views.Base.extend({
             model   = this.model.get('tags').get(cid);
 
         model.save();
+    },
+
+    setActiveTag: function (event) {
+        var $tr, cid, tags, tag;
+
+        if (typeof event === 'object') {
+            $tr  = $(event.currentTarget);
+            cid  = $tr.data('tag-cid');
+        }
+        else {
+            cid = event;
+        }
+
+        tags = this.model.get('tags');
+        tag  = tags.get(cid);
+
+        tags.each(function (model) { 
+            model.active = false;
+            model.view.render();
+        });
+
+        tag.active = true;
+        tag.view.render();
+
+        this.$('tr').removeClass('warning');
+
+        if ($tr) {
+            $tr.addClass('warning');
+        }
+        else {
+            this.render();
+        }
     },
 
     setCategory: function (event) {
