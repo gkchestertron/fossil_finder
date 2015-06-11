@@ -48,6 +48,7 @@ ff.Views.Finder = ff.Views.Base.extend({
                     success: function () {
                         self.addTag(tagModel);
                         tagModel.view.setActive();
+                        tagModel.trigger('dropdown-open', tagModel.cid);
                     }
                 });
             }
@@ -248,6 +249,13 @@ ff.Views.Inspector = ff.Views.Base.extend({
 
     initialize: function () {
         this.listenTo(this.model.get('tags'), 'active-tag-set', this.setActiveTag);
+        this.listenTo(this.model.get('tags'), 'dropdown-open', this.openDropdown);
+    },
+
+    openDropdown: function (cid) {
+        var $tr = this.$('tr[data-tag-cid="' + cid  + '"]');
+            
+        $tr.find('.dropdown-toggle').dropdown('toggle')
     },
 
     render: function () {
@@ -306,6 +314,5 @@ ff.Views.Inspector = ff.Views.Base.extend({
         }, {
             success: self.render.bind(self)
         });
-
     }
 });
