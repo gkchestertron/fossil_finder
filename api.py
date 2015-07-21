@@ -38,8 +38,7 @@ refs = api_manager.create_api_blueprint(
     methods=['GET'], 
     collection_name='refs', 
     preprocessors = { 
-        'GET_MANY': 
-            [refs_get_many_preprocessor] }, 
+        'GET_MANY': [refs_get_many_preprocessor] }, 
     include_methods=['img.href', 'tags.category'],
     results_per_page=None)
 
