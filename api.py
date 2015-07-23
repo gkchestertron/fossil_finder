@@ -47,3 +47,9 @@ tags = api_manager.create_api_blueprint(
     methods=['GET', 'POST', 'PUT', 'DELETE'],
     collection_name='tags',
     results_per_page=None)
+
+imgs = api_manager.create_api_blueprint(
+    models.Img,
+    methods=['GET'],
+    collection_name='imgs',
+    include_methods=['href'])

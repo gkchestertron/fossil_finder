@@ -21,7 +21,7 @@ class Img(db.Model):
 
     def href(self):
         split = self.kwid.split(' ')
-        href = 'http://calphotos.berkeley.edu/imgs/zoomucmp/%s_%s/%s/%s.jpeg' % (split[0], split[1], split[2], split[3])
+        href = 'http://calphotos.berkeley.edu/imgs/ucmp_zoom/%s_%s/%s/%s.jpeg' % (split[0], split[1], split[2], split[3])
         return href
 
 class Ref(db.Model):

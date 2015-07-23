@@ -35,6 +35,7 @@ app.register_blueprint(static.static)
 app.register_blueprint(api.refs)
 app.register_blueprint(api.categories)
 app.register_blueprint(api.tags)
+app.register_blueprint(api.imgs)
 
 # start the flask loop
 if __name__ == '__main__':
