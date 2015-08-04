@@ -13,7 +13,7 @@ db = flask.ext.sqlalchemy.SQLAlchemy(app)
 class Img(db.Model):
     __tablename__ = 'img_fossil_project'
     seq_num  = db.Column(db.Integer, primary_key = True)
-    ref      = db.relationship('Ref')
+    ref      = db.relationship('Ref', primaryjoin='Img.seq_num==foreign(Ref.seq_num)')
     imgnum   = db.Column(db.Integer)
     genre    = db.Column(db.String(9))
     collectn = db.Column(db.String(16))
@@ -27,9 +27,9 @@ class Img(db.Model):
 class Ref(db.Model):
     __tablename__ = 'fossil_finder_img_refs'
     id                      = db.Column(db.Integer, primary_key = True)
-    seq_num                 = db.Column(INTEGER(unsigned=True), db.ForeignKey('img_fossil_project.seq_num'), index = True, nullable = False, unique = True)
-    img                     = db.relationship('Img', uselist=False)
-    tags                    = db.relationship('Tag')
+    seq_num                 = db.Column(INTEGER(unsigned=True), index = True, nullable = False, unique = True)
+    img                     = db.relationship('Img', primaryjoin='Ref.seq_num==foreign(Img.seq_num)', uselist=False)
+    tags                    = db.relationship('Tag', primaryjoin='Ref.id==foreign(Tag.img_ref_id)')
     last_accessed_user_id   = db.Column(db.Integer, index = True)
     last_accessed_date_time = db.Column(db.DateTime, index = True)
     completed_by_user_id    = db.Column(db.Integer, index = True)
@@ -38,14 +38,14 @@ class Ref(db.Model):
 class Tag(db.Model):
     __tablename__ = 'fossil_finder_img_tags'
     id                  = db.Column(db.Integer, primary_key = True)
-    img_ref_id          = db.Column(db.Integer, db.ForeignKey('fossil_finder_img_refs.id'), nullable = False, index = True)
-    img_ref             = db.relationship('Ref')
+    img_ref_id          = db.Column(db.Integer, nullable = False, index = True)
+    img_ref             = db.relationship('Ref', primaryjoin='Tag.img_ref_id==foreign(Ref.id)')
     top                 = db.Column(db.Float)
     left                = db.Column(db.Float)
     width               = db.Column(db.Float)
     height              = db.Column(db.Float)
-    img_tag_category_id = db.Column(db.Integer, db.ForeignKey('fossil_finder_img_tag_categories.id'))
-    category            = db.relationship('Category', uselist=False)
+    img_tag_category_id = db.Column(db.Integer)
+    category            = db.relationship('Category', primaryjoin='Tag.img_tag_category_id==foreign(Category.id)', uselist=False)
 
 class User(db.Model):
     __tablename__ = 'fossil_finder_users'
