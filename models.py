@@ -34,6 +34,7 @@ class Ref(db.Model):
     last_accessed_date_time = db.Column(db.DateTime, index = True)
     completed_by_user_id    = db.Column(db.Integer, index = True)
     scale                   = db.Column(db.Float)
+    failed_to_load          = db.Column(db.Boolean)
     
 class Tag(db.Model):
     __tablename__ = 'fossil_finder_img_tags'

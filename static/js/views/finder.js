@@ -103,8 +103,20 @@ ff.Views.Finder = ff.Views.Base.extend({
             props.top = 0;
         }
 
-
         $element.css(props);
+    },
+
+    nextImage: function () {
+        var self = this;
+        
+        ff.refs.reset();
+        ff.refs.fetch({
+            success: function () {        
+                self.model = ff.refs.first();
+                self.render();
+            },
+            error: ff.error
+        });
     },
 
     remove: function () {
@@ -138,6 +150,7 @@ ff.Views.Finder = ff.Views.Base.extend({
 
             self.setScale();
 
+            self.inspector && self.inspector.remove();
             self.inspector = new ff.Views.Inspector({ 
                 el: $('#inspector'),
                 model: self.model,
@@ -148,6 +161,12 @@ ff.Views.Finder = ff.Views.Base.extend({
             self.drawTags();
 
             self.inspector.render();
+        })
+        .error(function () {
+            self.model.save({ failed_to_load: true }, {
+                success: self.nextImage.bind(self),
+                error: ff.error
+            });
         });
     },
 

@@ -7,6 +7,7 @@ ff.Models.Ref = ff.Models.Base.extend({
 
         return response;
     },
+
     urlRoot: '/api/refs'
 });
 
@@ -14,5 +15,6 @@ ff.Models.Ref = ff.Models.Base.extend({
 // ref collection class
 ff.Collections.Refs = ff.Collections.Base.extend({
     model: ff.Models.Ref,
+
     url: '/api/refs'
 });

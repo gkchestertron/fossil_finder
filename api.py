@@ -35,7 +35,7 @@ categories = api_manager.create_api_blueprint(
 
 refs = api_manager.create_api_blueprint(
     models.Ref, 
-    methods=['GET'], 
+    methods=['GET','PUT'], 
     collection_name='refs', 
     preprocessors = { 
         'GET_MANY': [refs_get_many_preprocessor] }, 

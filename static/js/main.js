@@ -1,4 +1,7 @@
 window.ff = {
+    error: function () {
+        alert('Something has gone wrong. If the problem persists please contact us about the issue.');
+    },
     Models: {},
     Collections: {},
     Views: {},
