@@ -6,6 +6,7 @@ import flask.ext.restless
 import MySQLdb
 import models
 import static
+from sqlalchemy import and_
 
 # Grab reference to the Flask application and the Flask-SQLAlchemy object.
 app = flask.Flask(__name__)
@@ -13,7 +14,7 @@ app.config.from_object('config')
 
 # preprocessors
 def refs_get_many_preprocessor(search_params=None, **kw):
-    ref = models.Ref.query.filter(models.Ref.last_accessed_date_time == None).first()
+    ref = models.Ref.query.filter(and_(models.Ref.last_accessed_date_time == None, models.Ref.failed_to_load == None)).first()
     if not ref: # creates a new ref based on first image that doesn't have a corresponding ref
         img = models.Img.query.filter(models.Img.ref == None).first()
         ref = models.Ref(seq_num = img.seq_num)
