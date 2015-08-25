@@ -54,8 +54,8 @@ class User(db.Model):
     auth_level    = db.Column(db.Integer, nullable    = False)
     group_code    = db.Column(db.String(255))
     group_name    = db.Column(db.String(255))
-    username      = db.Column(db.String(255))
-    password_hash = db.Column(db.String(255))
+    username      = db.Column(db.String(255), index=True)
+    password_hash = db.Column(db.String(255), index=True)
 
 class Category(db.Model):
     __tablename__ = 'fossil_finder_img_tag_categories'

@@ -1,6 +1,6 @@
-# TODO add custom getter for refs
 # TODO add auth and block access based on auth level
 import flask
+from flask import g
 import flask.ext.sqlalchemy
 import flask.ext.restless
 import MySQLdb
@@ -22,7 +22,12 @@ def refs_get_many_preprocessor(search_params=None, **kw):
     models.db.session.commit()
     search_params['filters'] = [{ 'name': 'id', 'op': 'eq', 'val': ref.id }]
     models.db.session.close_all()
-
+    if hasattr(g, 'test'):
+        print g.test
+    else:
+        print 'no test yet'
+        g.test = 'this is a test'
+    
 # Create the Flask-Restless API manager.
 api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=models.db)
 

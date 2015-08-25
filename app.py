@@ -5,6 +5,7 @@ from flask.ext.assets import Environment, Bundle
 
 # Create the Flask application
 app = flask.Flask(__name__)
+app.secret_key = 'dinosaurs are awesome!'
 
 # register assets - any new js must go in here
 # TODO automate finding the files in the tree
@@ -14,6 +15,7 @@ js = Bundle(
     'js/lib/underscore.js',
     'js/lib/backbone.js',
     'bootstrap-3.3.4-dist/js/bootstrap.js',
+    'js/monkey.js',
     'js/main.js',
     'js/data/base.js',
     'js/data/refs.js',

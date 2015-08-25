@@ -130,9 +130,11 @@ ff.Views.Finder = ff.Views.Base.extend({
     render: function () {
         var self = this;
 
+        this.imageLoaded = false;
         this.$el.html(_.template(ff.templates.get('finder'))(self.model.attributes));
 
         $('#current-image').one('load', function () {
+            self.imageLoaded = true;
             // get initial height for setting scale
             self.initialImageWidth  = $('#current-image').width();
             self.initialImageHeight = $('#current-image').height();
@@ -192,6 +194,7 @@ ff.Views.Finder = ff.Views.Base.extend({
             offsetEnd, offsetDiff, diff;
 
         event.preventDefault();
+        if (!this.imageLoaded) return;
 
         if (width >= this.finderWidth && width <= this.initialImageWidth) {
             $imageWrapper.width(width);
@@ -222,6 +225,8 @@ ff.Views.Finder = ff.Views.Base.extend({
             diff   = this.finderWidth/9,
             x      = 0, 
             y      = 0;
+
+        if (!this.imageLoaded) return;
 
         if (offset.top < diff) y = -10;
         if (offset.top > (this.finderHeight - diff)) y = 10;
@@ -261,12 +266,14 @@ ff.Views.Inspector = ff.Views.Base.extend({
 
     events: {
         'click [data-function=destroy]': 'destroy',
-        'click [data-function=save]': 'save',
+        'click [data-function=saveComplete]': 'saveComplete',
+        'click [data-function=saveIncomplete]': 'saveIncomplete',
         'click .dropdown a': 'setCategory',
         'click tr': 'setActiveTag'
     },
 
-    initialize: function () {
+    initialize: function (options) {
+        this.parent = options.parent;
         this.listenTo(this.model.get('tags'), 'active-tag-set', this.setActiveTag);
         this.listenTo(this.model.get('tags'), 'dropdown-open', this.openDropdown);
     },
@@ -281,12 +288,23 @@ ff.Views.Inspector = ff.Views.Base.extend({
         this.$el.html(_.template(ff.templates.get('inspector'))(this.model.attributes));
     },
 
-    save: function (event) {
-        var $button = $(event.currentTarget),
-            cid     = $button.data('cid'),
-            model   = this.model.get('tags').get(cid);
+    saveComplete: function (event) {
+        // TODO: set user id
+        this.model.save({
+            // formats for mysql - don't worry there is a polyfill in monkey.js
+            last_accessed_date_time: (new Date()).toISOString().substring(0, 19).replace('T', ' ')
+        }, {
+            success: this.parent.nextImage.bind(this.parent)
+        });
+    },
 
-        model.save();
+    saveIncomplete: function (event) {
+        this.model.save({
+            // formats for mysql - don't worry there is a polyfill in monkey.js
+            last_accessed_date_time: (new Date()).toISOString().substring(0, 19).replace('T', ' ')
+        }, {
+            success: this.parent.nextImage.bind(this.parent)
+        });
     },
 
     setActiveTag: function (event) {

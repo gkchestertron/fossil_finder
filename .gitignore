@@ -2,3 +2,4 @@ venv
 static/build/*
 static/.webassets-cache/*
 *.pyc
+*.swp
