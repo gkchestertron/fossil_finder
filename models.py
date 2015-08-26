@@ -3,6 +3,8 @@ import flask
 import flask.ext.sqlalchemy
 import MySQLdb
 from sqlalchemy.dialects.mysql import INTEGER # need this for constraints
+import bcrypt
+from itsdangerous import TimedJSONSerializer as Serializer, BadSignature, SignatureExpired
 
 # grab reference to the Flask application and the Flask-SQLAlchemy object
 app = flask.Flask(__name__)
@@ -48,6 +50,11 @@ class Tag(db.Model):
     img_tag_category_id = db.Column(db.Integer)
     category            = db.relationship('Category', primaryjoin='Tag.img_tag_category_id==foreign(Category.id)', uselist=False)
 
+class Category(db.Model):
+    __tablename__ = 'fossil_finder_img_tag_categories'
+    id   = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(255))
+
 class User(db.Model):
     __tablename__ = 'fossil_finder_users'
     id            = db.Column(db.Integer, primary_key = True)
@@ -57,10 +64,33 @@ class User(db.Model):
     username      = db.Column(db.String(255), index=True)
     password_hash = db.Column(db.String(255), index=True)
 
-class Category(db.Model):
-    __tablename__ = 'fossil_finder_img_tag_categories'
-    id   = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(255))
+    def generate_token(self, exp=600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in=exp)
+        return s.dumps({'id': self.id})
+
+    def generate_password_hash(self, password):
+        pass
+
+    def verify_password(self, password_hash):
+        pass
+
+    @staticmethod
+    def from_token(token):
+        s = Serializer(app.config['SECRET_KEY'], expires_in=exp)
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None
+        except BadSignature:
+            return None
+        user = User.query.get(data['id'])
+        return user
+
+    def login(self):
+        pass
+
+def current_user():
+    pass
 
 # create all the things
 db.create_all()
