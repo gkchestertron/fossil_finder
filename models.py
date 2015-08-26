@@ -69,10 +69,12 @@ class User(db.Model):
         return s.dumps({'id': self.id})
 
     def generate_password_hash(self, password):
-        pass
-
-    def verify_password(self, password_hash):
-        pass
+        hash = bcrypt.hashpw(password, bcrypt.gensalt())
+        self.password_hash = hash
+        db.session.commit()
+        
+    def verify_password(self, password):
+        return bcrypt.hashpw(password, self.password_hash) == self.password_hash
 
     @staticmethod
     def from_token(token):
