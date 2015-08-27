@@ -21,7 +21,10 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               {% if current_user %}
-              {{current_user.username}}
+              <ul class="nav navbar-nav navbar-right">
+                  <li><a href="#">{{current_user.username}}</a></li>
+                  <li><a href="/logout">logout</a></li>
+              </ul>
               {% else %}
               <form class="navbar-form navbar-right" action="/login" method="POST">
                 <div class="form-group">

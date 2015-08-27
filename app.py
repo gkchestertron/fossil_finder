@@ -5,7 +5,7 @@ from flask.ext.assets import Environment, Bundle
 
 # Create the Flask application
 app = Flask(__name__)
-app.secret_key = 'dinosaurs are awesome!'
+app.config.from_object('config')
 
 # register assets - any new js must go in here
 # TODO automate finding the files in the tree
