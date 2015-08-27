@@ -1,10 +1,11 @@
-import flask
+from flask import Flask, request, abort, session, g, redirect
 import static
 import api
 from flask.ext.assets import Environment, Bundle
 
 # Create the Flask application
-app = flask.Flask(__name__)
+app = Flask(__name__)
+app.secret_key = 'dinosaurs are awesome!'
 
 # register assets - any new js must go in here
 # TODO automate finding the files in the tree
@@ -30,13 +31,28 @@ js = Bundle(
 assets.register('js_all', js)
 
 # Register static blueprint
-app.register_blueprint(static.static)
+app.register_blueprint(static.static, session=session, g=g)
 
 # Register api blueprints
-app.register_blueprint(api.refs)
-app.register_blueprint(api.categories)
-app.register_blueprint(api.tags)
-app.register_blueprint(api.imgs)
+app.register_blueprint(api.refs, session=session, g=g)
+app.register_blueprint(api.categories, session=session, g=g)
+app.register_blueprint(api.tags, session=session, g=g)
+app.register_blueprint(api.imgs, session=session, g=g)
+
+# login
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    if username is None or password is None:
+        abort(400)
+    user = api.models.User.query.filter(api.models.User.username == username).first()
+    if not user or not user.verify_password(password):
+        abort(400)
+    else:
+        session['token'] = user.generate_token()
+        g.current_user = user
+        return redirect('/')
 
 # start the flask loop
 if __name__ == '__main__':

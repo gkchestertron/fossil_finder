@@ -1,12 +1,12 @@
-import flask
+from flask import Flask, session, g
 import flask.ext.sqlalchemy
 import MySQLdb
 from sqlalchemy.dialects.mysql import INTEGER # need this for constraints
 import bcrypt
-from itsdangerous import TimedJSONSerializer as Serializer, BadSignature, SignatureExpired
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 
 # grab reference to the Flask application and the Flask-SQLAlchemy object
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.config.from_object('config')
 db = flask.ext.sqlalchemy.SQLAlchemy(app)
 
@@ -64,7 +64,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), index=True)
 
     def generate_token(self, exp=600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in=exp)
+        s = Serializer(app.config['SERIALIZER_KEY'], expires_in=exp)
         return s.dumps({'id': self.id})
 
     def generate_password_hash(self, password):
@@ -77,7 +77,7 @@ class User(db.Model):
 
     @staticmethod
     def from_token(token):
-        s = Serializer(app.config['SECRET_KEY'], expires_in=exp)
+        s = Serializer(app.config['SERIALIZER_KEY'])
         try:
             data = s.loads(token)
         except SignatureExpired:
@@ -86,12 +86,6 @@ class User(db.Model):
             return None
         user = User.query.get(data['id'])
         return user
-
-    def login(self):
-        pass
-
-def current_user():
-    pass
 
 # create all the things
 db.create_all()

@@ -1,6 +1,5 @@
 # TODO add auth and block access based on auth level
-import flask
-from flask import g, session, request
+from flask import Flask, g, session, request, abort
 import flask.ext.sqlalchemy
 import flask.ext.restless
 import MySQLdb
@@ -9,7 +8,7 @@ import static
 from sqlalchemy import and_
 
 # Grab reference to the Flask application and the Flask-SQLAlchemy object.
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.config.from_object('config')
 
 # preprocessors
@@ -22,6 +21,14 @@ def refs_get_many_preprocessor(search_params=None, **kw):
     models.db.session.commit()
     search_params['filters'] = [{ 'name': 'id', 'op': 'eq', 'val': ref.id }]
     models.db.session.close_all()
+
+def logged_in(search_params=None, **kw):
+    if not session.get('token'):
+        abort(401)
+    user = models.User.from_token(session.get('token'))
+    if not user:
+        abort(401)
+    g.current_user = user
    
 # Create the Flask-Restless API manager.
 api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=models.db)
@@ -38,14 +45,18 @@ refs = api_manager.create_api_blueprint(
     models.Ref, 
     methods=['GET','PUT'], 
     collection_name='refs', 
-    preprocessors = { 
-        'GET_MANY': [refs_get_many_preprocessor] }, 
+    preprocessors = {
+        'GET_MANY': [refs_get_many_preprocessor],
+        'PATCH_SINGLE': [logged_in]},
     include_methods=['img.href', 'tags.category'],
     results_per_page=None)
 
 tags = api_manager.create_api_blueprint(
     models.Tag,
     methods=['GET', 'POST', 'PUT', 'DELETE'],
+    preprocessors = {
+        'PATCH_SINGLE': [logged_in],
+        'POST': [logged_in]},
     collection_name='tags',
     results_per_page=None)
 
@@ -55,14 +66,4 @@ imgs = api_manager.create_api_blueprint(
     collection_name='imgs',
     include_methods=['href'])
 
-@app.route('/login'):
-def login():
-    username = request.json.get('username')
-    password = request.json.get('password')
-    if username is None or password is None:
-        abort(400)
-    user = models.User.query.filter(models.User.username=username).first()
-    if not user or not user.verify_password(password):
-        abort(400)
-    else:
-        g.current_user = user
+
