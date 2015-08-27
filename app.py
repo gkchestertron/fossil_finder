@@ -54,6 +54,11 @@ def login():
         g.current_user = user
         return redirect('/')
 
+@app.route('/logout')
+def logout():
+    session['token'] = ''
+    return redirect('/')
+
 # start the flask loop
 if __name__ == '__main__':
     app.run(debug=True)
