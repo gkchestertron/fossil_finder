@@ -57,7 +57,7 @@ def login():
     if username is None or password is None:
         return redirect('/')
 
-    user = api.models.User.query.filter(api.models.User.username == username).first()
+    user = api.models.User.from_username(username)
     if not user or not user.verify_password(password):
         return redirect('/')
     else:

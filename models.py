@@ -95,5 +95,9 @@ class User(db.Model):
         user = cls.query.get(data['id'])
         return user
 
+    @classmethod
+    def from_username(cls, token):
+        return cls.query.filter(api.models.User.username == username).first()
+
 # create all the things
 db.create_all()
