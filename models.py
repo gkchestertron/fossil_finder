@@ -1,4 +1,3 @@
-# TODO add constraints/relationships
 import flask
 import flask.ext.sqlalchemy
 import MySQLdb
@@ -69,8 +68,8 @@ class User(db.Model):
         return s.dumps({'id': self.id})
 
     def generate_password_hash(self, password):
-        hash = bcrypt.hashpw(password, bcrypt.gensalt())
-        self.password_hash = hash
+        password_hash = bcrypt.hashpw(password, bcrypt.gensalt())
+        self.password_hash = password_hash
         db.session.commit()
         
     def verify_password(self, password):
