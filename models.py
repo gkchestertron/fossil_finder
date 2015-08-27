@@ -75,8 +75,16 @@ class User(db.Model):
     def verify_password(self, password):
         return bcrypt.hashpw(password, self.password_hash) == self.password_hash
 
-    @staticmethod
-    def from_token(token):
+    def login(self):
+        session['token'] = self.generate_token()
+        g.current_user = self
+
+    @classmethod
+    def from_group_code(cls, group_code):
+        return cls.query.filter(cls.group_code == group_code).first()
+
+    @classmethod
+    def from_token(cls, token):
         s = Serializer(app.config['SERIALIZER_KEY'])
         try:
             data = s.loads(token)
@@ -84,7 +92,7 @@ class User(db.Model):
             return None
         except BadSignature:
             return None
-        user = User.query.get(data['id'])
+        user = cls.query.get(data['id'])
         return user
 
 # create all the things

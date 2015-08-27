@@ -1,6 +1,7 @@
-from flask import Flask, request, abort, session, g, redirect
+from flask import Flask, request, session, g, redirect
 import static
 import api
+from models import User
 from flask.ext.assets import Environment, Bundle
 
 # Create the Flask application
@@ -44,14 +45,23 @@ app.register_blueprint(api.imgs, session=session, g=g)
 def login():
     username = request.form['username']
     password = request.form['password']
+    group_code = request.form['group_code']
+    if group_code:
+        user = User.from_group_code(group_code)
+        if not user:
+            return redirect('/')
+        else:
+            user.login()
+            return redirect('/')
+
     if username is None or password is None:
-        abort(400)
+        return redirect('/')
+
     user = api.models.User.query.filter(api.models.User.username == username).first()
     if not user or not user.verify_password(password):
-        abort(400)
+        return redirect('/')
     else:
-        session['token'] = user.generate_token()
-        g.current_user = user
+        user.login()
         return redirect('/')
 
 @app.route('/logout')
