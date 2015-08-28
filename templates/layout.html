@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+    <head>
+        {% assets "js_all" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-3.3.4-dist/css/bootstrap.css') }}">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+</html>

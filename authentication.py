@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, Blueprint, g, request, redirect
+from flask import Flask, session, render_template, Blueprint, g, request, redirect, url_for
 from models import User
 from flask.ext.mail import Mail, Message
 
@@ -44,7 +44,7 @@ def logout():
 def signup():
     email = request.form.get('email')
     password = request.form.get('password')
-    confirm = request.get('confirm_password') 
+    confirm = request.form.get('confirm_password') 
 
     if request.method == 'GET' or not email or not password or password != confirm:
         return render_template('signup.html')
@@ -54,9 +54,15 @@ def signup():
     if not user:
         return 'bad email or password', 400
 
+    verify_link = url_for('.verify_email')
     msg = Message("Hello,  welcome to UCMP Fossil Finder",
                   sender="john.fellman@gmail.com",
                   recipients=["john.fellman@gmail.com"],
                   body="Please verify your email: " + verify_link)
     mail.send(msg)
     return redirect('/')
+
+# verify email
+@authentication.route('/verify_email')
+def verify_email():
+    return 'email verified'
