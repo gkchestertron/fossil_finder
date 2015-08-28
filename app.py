@@ -1,5 +1,6 @@
 from flask import Flask, request, session, g, redirect
 import static
+import authentication
 import api
 from models import User
 from flask.ext.assets import Environment, Bundle
@@ -34,40 +35,14 @@ assets.register('js_all', js)
 # Register static blueprint
 app.register_blueprint(static.static, session=session, g=g)
 
+# Register authentication blueprint
+app.register_blueprint(authentication.authentication, session=session, g=g)
+
 # Register api blueprints
 app.register_blueprint(api.refs, session=session, g=g)
 app.register_blueprint(api.categories, session=session, g=g)
 app.register_blueprint(api.tags, session=session, g=g)
 app.register_blueprint(api.imgs, session=session, g=g)
-
-# login
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-    group_code = request.form['group_code']
-    if group_code:
-        user = User.from_group_code(group_code)
-        if not user:
-            return redirect('/')
-        else:
-            user.login()
-            return redirect('/')
-
-    if username is None or password is None:
-        return redirect('/')
-
-    user = api.models.User.from_username(username)
-    if not user or not user.verify_password(password):
-        return redirect('/')
-    else:
-        user.login()
-        return redirect('/')
-
-@app.route('/logout')
-def logout():
-    session['token'] = ''
-    return redirect('/')
 
 # start the flask loop
 if __name__ == '__main__':

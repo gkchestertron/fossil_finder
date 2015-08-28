@@ -66,5 +66,3 @@ imgs = api_manager.create_api_blueprint(
     methods=['GET'],
     collection_name='imgs',
     include_methods=['href'])
-
-

@@ -60,7 +60,7 @@ class User(db.Model):
     auth_level    = db.Column(db.Integer, nullable    = False)
     group_code    = db.Column(db.String(255))
     group_name    = db.Column(db.String(255))
-    username      = db.Column(db.String(255), index=True)
+    email      = db.Column(db.String(255), index=True)
     password_hash = db.Column(db.String(255), index=True)
 
     def generate_token(self, exp=600):
@@ -96,8 +96,18 @@ class User(db.Model):
         return user
 
     @classmethod
-    def from_username(cls, token):
-        return cls.query.filter(api.models.User.username == username).first()
+    def from_email(cls, email):
+        return cls.query.filter(cls.email == email).first()
+
+    @classmethod
+    def create(cls, email=None, password=None, auth_level=1):
+        if not email or not password:
+            return
+        user = cls(email=email, auth_level=1)
+        db.session.add(user)
+        db.session.commit()
+        user.generate_password_hash(password)
+        return user
 
 # create all the things
 db.create_all()
