@@ -44,8 +44,9 @@ def logout():
 def signup():
     email = request.form.get('email')
     password = request.form.get('password')
+    confirm = request.get('confirm_password') 
 
-    if request.method == 'GET' or not email or not password:
+    if request.method == 'GET' or not email or not password or password != confirm:
         return render_template('signup.html')
 
     user = User.create(auth_level=1, email=email, password=password)
@@ -53,8 +54,9 @@ def signup():
     if not user:
         return 'bad email or password', 400
 
-    msg = Message("Hello" + user.email,
+    msg = Message("Hello,  welcome to UCMP Fossil Finder",
                   sender="john.fellman@gmail.com",
-                  recipients=["john.fellman@gmail.com"])
+                  recipients=["john.fellman@gmail.com"],
+                  body="Please verify your email: " + verify_link)
     mail.send(msg)
     return redirect('/')
