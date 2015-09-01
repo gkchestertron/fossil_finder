@@ -28,7 +28,7 @@ def logged_in(search_params=None, **kw):
     if not session.get('token'):
         abort(401)
     user = models.User.from_token(session.get('token'))
-    if not user:
+    if not user or not user.active:
         abort(401)
     g.current_user = user
 
@@ -56,8 +56,8 @@ refs = api_manager.create_api_blueprint(
     methods=['GET','PUT'], 
     collection_name='refs', 
     preprocessors = {
-        'GET_MANY': [refs_get_many_preprocessor],
-        'PATCH_SINGLE': [logged_in]},
+        'GET_MANY'     : [refs_get_many_preprocessor],
+        'PATCH_SINGLE' : [logged_in]},
     include_methods=['img.href', 'tags.category'],
     results_per_page=None)
 
@@ -65,9 +65,9 @@ tags = api_manager.create_api_blueprint(
     models.Tag,
     methods=['GET', 'POST', 'PUT', 'DELETE'],
     preprocessors = {
-        'PATCH_SINGLE': [logged_in],
-        'POST': [logged_in],
-        'DELETE_SINGLE': [logged_in]},
+        'PATCH_SINGLE'  : [logged_in],
+        'POST'          : [logged_in],
+        'DELETE_SINGLE' : [logged_in]},
     collection_name='tags',
     results_per_page=None)
 
@@ -79,11 +79,13 @@ imgs = api_manager.create_api_blueprint(
 
 users = api_manager.create_api_blueprint(
     models.User,
-    methods=['GET'],
+    methods=['GET', 'PUT'],
     collection_name='users',
     preprocessors = {
-        'GET_SINGLE': [is_admin],
-        'GET_MANY': [is_admin]
+        'GET_SINGLE'   : [is_admin],
+        'GET_MANY'     : [is_admin],
+        'PATCH_SINGLE' : [is_admin]
     },
+    exclude_columns=['password_hash'],
     results_per_page=None)
 

@@ -70,6 +70,7 @@ class User(db.Model):
     email         = db.Column(db.String(255), index=True, unique=True)
     password_hash = db.Column(db.String(255), index=True)
     verified      = db.Column(db.Boolean, nullable=False, default=False)
+    active        = db.Column(db.Boolean, nullable=False, default=True)
 
     def generate_token(self, exp=3600):
         s = Serializer(app.config['SERIALIZER_KEY'], expires_in=exp)
@@ -88,7 +89,7 @@ class User(db.Model):
         g.current_user = self
 
     def verify(self):
-        self.verifid = True
+        self.verified = True
         db.session.add(self)
         db.session.commit()
 

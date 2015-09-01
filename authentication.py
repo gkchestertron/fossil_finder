@@ -20,13 +20,19 @@ def login():
         if not user:
             return redirect('/')
         else:
-            user.login()
+            if user.active:
+                user.login()
             return redirect('/')
 
     if email is None or password is None:
         return redirect('/')
 
     user = User.from_email(email)
+
+    if not user.active and not user.auth_level == 3:
+        flash(u'Inactive User', 'danger')
+        return redirect('/')
+
     if not user or not user.verify_password(password):
         flash(u'Login Failed - Bad Email or Password', 'danger')
         return redirect('/')

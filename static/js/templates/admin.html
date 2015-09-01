@@ -1,5 +1,35 @@
-this is the admin page rendered from backbone templates
-no of users: <%= users.length %> <br />
-no of refs: <%= refs.length %><br />
-no of tags: <%= tags.length %><br />
-no of categories: <%= categories.length %>
+<div class="row">
+    <div class="col-xs-10 col-xs-offset-1">
+        <h1>Users (<%= users.length %>)</h1>
+        <table class="table table-striped">
+            <thead>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Auth Level</th>
+                <th>Verified</th>
+                <th>Group Name</th>
+                <th>Group Code</th>
+                <th>Active</th>
+                <th>Activate/Deactivate</th>
+            </thead>
+            <tbody>
+                <% users.each(function (user) { %>
+                <tr data-model-id="<%= user.id %>">
+                    <td><%= user.id %></td>
+                    <td><%= user.get('email') %></td>
+                    <td><%= user.get('auth_level') %></td>
+                    <td><%= user.get('verified') %></td>
+                    <td><%= user.get('group_name') %></td>
+                    <td><%= user.get('group_code') %></td>
+                    <td><%= user.get('active') %></td>
+                    <% if (user.get('active')) { %>
+                    <td><button class="btn btn-danger" data-function="deactivateUser">Deactivate</td>
+                    <% } else { %>
+                    <td><button class="btn btn-primary" data-function="activateUser">Activate</td>
+                    <% } %>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
