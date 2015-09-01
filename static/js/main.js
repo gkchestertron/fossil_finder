@@ -61,4 +61,11 @@ $(document).ready(function() {
             }
         });
     }
+
+    // remove flash messages after 3 seconds
+    setTimeout(function () {
+        $('.flashes').hide('slow', function () {
+            $(window).trigger('resize');
+        });
+    }, 3000);
 });

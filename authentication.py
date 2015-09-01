@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, Blueprint, g, request, redirect, url_for
+from flask import Flask, session, render_template, Blueprint, g, request, redirect, url_for, flash
 from models import User
 from flask.ext.mail import Mail, Message
 
@@ -28,8 +28,10 @@ def login():
 
     user = User.from_email(email)
     if not user or not user.verify_password(password):
+        flash(u'Login Failed - Bad Email or Password', 'danger')
         return redirect('/')
     else:
+        flash(u'Login Successful - Welcome!', 'success')
         user.login()
         return redirect('/')
 
@@ -52,7 +54,8 @@ def signup():
     user = User.create(auth_level=1, email=email, password=password)
 
     if not user:
-        return 'bad email or password', 400
+        flash(u'Signup Failed - Bad Email or Password', 'danger')
+        return redirect('/')
 
     verify_link = app.config.get('APP_URL') + 'verify_email?token=' + user.generate_token()
     msg = Message("Hello,  welcome to UCMP Fossil Finder",
@@ -60,6 +63,7 @@ def signup():
                   recipients=[email],
                   body="Please verify your email: " + verify_link)
     mail.send(msg)
+    flash(u'Signup Successful - Please Check Your Email for Verification Link', 'success')
     return redirect('/')
 
 # verify email
@@ -70,4 +74,7 @@ def verify_email():
     if user and not user.verified:
         user.verify()
         user.login()
+        flash(u'Email Verified - Welcome!', 'success')
+    else:
+        flash(u'Something went Wrong - Please Try Signing up Again', 'danger')
     return redirect('/')

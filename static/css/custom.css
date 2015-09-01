@@ -8,7 +8,10 @@
 }
 
 #app {
-    margin-top: 67px;
+    margin-top: 87px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0px;
 }
 
 #current-image {
@@ -23,6 +26,11 @@
 
 .dropdown-toggle, .dropdown a {
     cursor: pointer;
+}
+
+.flashes {
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 #fossil-finder {

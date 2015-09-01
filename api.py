@@ -13,6 +13,8 @@ app.config.from_object('config')
 
 # preprocessors
 def refs_get_many_preprocessor(search_params=None, **kw):
+    if request.args.get('all'):
+        return
     ref = models.Ref.query.filter(and_(models.Ref.last_accessed_date_time == None, models.Ref.failed_to_load == None)).first()
     if not ref: # creates a new ref based on first image that doesn't have a corresponding ref
         img = models.Img.query.filter(models.Img.ref == None).first()
@@ -28,6 +30,14 @@ def logged_in(search_params=None, **kw):
     user = models.User.from_token(session.get('token'))
     if not user:
         abort(401)
+    g.current_user = user
+
+def is_admin(search_params=None, **kw):
+    if not session.get('token'):
+        abort(401)
+    user = models.User.from_token(session.get('token'))
+    if not user or user.auth_level < 3:
+        abort(403)
     g.current_user = user
    
 # Create the Flask-Restless API manager.
@@ -66,3 +76,14 @@ imgs = api_manager.create_api_blueprint(
     methods=['GET'],
     collection_name='imgs',
     include_methods=['href'])
+
+users = api_manager.create_api_blueprint(
+    models.User,
+    methods=['GET'],
+    collection_name='users',
+    preprocessors = {
+        'GET_SINGLE': [is_admin],
+        'GET_MANY': [is_admin]
+    },
+    results_per_page=None)
+

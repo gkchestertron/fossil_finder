@@ -16,5 +16,5 @@ ff.Models.Ref = ff.Models.Base.extend({
 ff.Collections.Refs = ff.Collections.Base.extend({
     model: ff.Models.Ref,
 
-    url: '/api/refs'
+    url: '/api/refs?all=true'
 });

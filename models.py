@@ -55,14 +55,21 @@ class Category(db.Model):
     name = db.Column(db.String(255))
 
 class User(db.Model):
+    '''
+        auth_level 1 - basic user
+        auth_level 2 - expert user
+        auth_level 3 - admin
+    '''
+
     __tablename__ = 'fossil_finder_users'
+
     id            = db.Column(db.Integer, primary_key = True)
     auth_level    = db.Column(db.Integer, nullable    = False)
     group_code    = db.Column(db.String(255))
     group_name    = db.Column(db.String(255))
-    email      = db.Column(db.String(255), index=True)
+    email         = db.Column(db.String(255), index=True, unique=True)
     password_hash = db.Column(db.String(255), index=True)
-    verified = db.Column(db.Boolean, nullable=False, default=False)
+    verified      = db.Column(db.Boolean, nullable=False, default=False)
 
     def generate_token(self, exp=3600):
         s = Serializer(app.config['SERIALIZER_KEY'], expires_in=exp)
@@ -74,7 +81,7 @@ class User(db.Model):
         db.session.commit()
         
     def verify_password(self, password):
-        return bcrypt.hashpw(password, self.password_hash) == self.password_hash
+        return bcrypt.hashpw(password, self.password_hash) == self.password_hash and self.verified
 
     def login(self):
         session['token'] = self.generate_token()
@@ -109,11 +116,15 @@ class User(db.Model):
     def create(cls, email=None, password=None, auth_level=1):
         if not email or not password:
             return
-        user = cls(email=email, auth_level=1)
-        db.session.add(user)
-        db.session.commit()
-        user.generate_password_hash(password)
-        return user
+        try:
+            user = cls(email=email, auth_level=1)
+            db.session.add(user)
+            db.session.commit()
+            user.generate_password_hash(password)
+            return user
+        except:
+            db.session.rollback()
+            return None
 
 # create all the things
 db.create_all()

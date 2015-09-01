@@ -8,6 +8,58 @@
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
     </head>
     <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/">UCMP Fossil Finder</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              {% if current_user %}
+              <ul class="nav navbar-nav navbar-right">
+                  <li><a href="#">{{current_user.email}}</a></li>
+                  <li><a href="/logout">logout</a></li>
+                  {% if current_user.auth_level == 3 %}
+                  <li><a href="/admin">admin</a></li>
+                  {% endif %}
+              </ul>
+              {% else %}
+              <ul class="nav navbar-nav navbar-right">
+                  <li><a href="/signup">Signup</a></li>
+              </ul>
+              <form class="navbar-form navbar-right" action="/login" method="POST">
+                <div class="form-group">
+                  <input type="text" name="group_code" placeholder="Enter Code" class="form-control">
+                </div>
+                <div class="form-group">
+                    <span class="navbar-text">OR</span>
+                </div>
+                <div class="form-group">
+                  <input name="email" type="text" placeholder="Email" class="form-control">
+                </div>
+                <div class="form-group">
+                  <input name="password" type="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+              </form>
+              {% endif %}
+            </div><!--/.navbar-collapse -->
+          </div>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                  <div class="flashes">
+                  {% for category, message in messages %}
+                      <div class="alert alert-{{ category }}">{{ message }}</div>
+                  {% endfor %}
+                  </div>
+              {% endif %}
+          {% endwith %}
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>
