@@ -9,6 +9,7 @@ static = Blueprint("static", __name__)
 app = Flask(__name__)
 assets = Environment()
 assets.init_app(app)
+app.config.from_object('config')
 
 # main page
 @static.route('/')

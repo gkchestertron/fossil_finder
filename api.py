@@ -57,7 +57,7 @@ tags = api_manager.create_api_blueprint(
     preprocessors = {
         'PATCH_SINGLE': [logged_in],
         'POST': [logged_in],
-        'DELETE': [logged_in]},
+        'DELETE_SINGLE': [logged_in]},
     collection_name='tags',
     results_per_page=None)
 

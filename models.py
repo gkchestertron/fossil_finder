@@ -62,8 +62,9 @@ class User(db.Model):
     group_name    = db.Column(db.String(255))
     email      = db.Column(db.String(255), index=True)
     password_hash = db.Column(db.String(255), index=True)
+    verified = db.Column(db.Boolean, nullable=False, default=False)
 
-    def generate_token(self, exp=600):
+    def generate_token(self, exp=3600):
         s = Serializer(app.config['SERIALIZER_KEY'], expires_in=exp)
         return s.dumps({'id': self.id})
 
@@ -78,6 +79,11 @@ class User(db.Model):
     def login(self):
         session['token'] = self.generate_token()
         g.current_user = self
+
+    def verify(self):
+        self.verifid = True
+        db.session.add(self)
+        db.session.commit()
 
     @classmethod
     def from_group_code(cls, group_code):

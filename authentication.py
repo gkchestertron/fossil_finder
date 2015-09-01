@@ -54,10 +54,10 @@ def signup():
     if not user:
         return 'bad email or password', 400
 
-    verify_link = url_for('.verify_email')
+    verify_link = app.config.get('APP_URL') + 'verify_email?token=' + user.generate_token()
     msg = Message("Hello,  welcome to UCMP Fossil Finder",
                   sender="john.fellman@gmail.com",
-                  recipients=["john.fellman@gmail.com"],
+                  recipients=[email],
                   body="Please verify your email: " + verify_link)
     mail.send(msg)
     return redirect('/')
@@ -65,4 +65,9 @@ def signup():
 # verify email
 @authentication.route('/verify_email')
 def verify_email():
-    return 'email verified'
+    token = request.args.get('token')
+    user = User.from_token(token)
+    if user and not user.verified:
+        user.verify()
+        user.login()
+    return redirect('/')
