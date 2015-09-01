@@ -28,7 +28,10 @@ ff.Router = Backbone.Router.extend({
                 categories: categories,
                 tags: tags,
             });
-        
+
+        // set refs url to fetch all
+        refs.url = '/api/refs?all=true'
+
         users.fetch({ success: callback });
         refs.fetch({ success: callback });
         tags.fetch({ success: callback });
