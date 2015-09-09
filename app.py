@@ -1,14 +1,22 @@
-from flask import Flask, request, session, g, redirect
+from flask import Flask, request, session, g, redirect, abort
 import static
 import authentication
 import api
 import admin
+import bcrypt
 from models import User
 from flask.ext.assets import Environment, Bundle
 
 # Create the Flask application
 app = Flask(__name__)
 app.config.from_object('config')
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = bcrypt.gensalt()
+    return session['_csrf_token']
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token    
 
 # register assets - any new js must go in here
 # TODO automate finding the files in the tree

@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, Blueprint, g, request, redirect, url_for, flash
+from flask import Flask, session, render_template, Blueprint, g, request, redirect, url_for, flash, abort
 from models import User
 from flask.ext.mail import Mail, Message
 
@@ -8,6 +8,15 @@ authentication = Blueprint("authentication", __name__)
 app = Flask(__name__)
 app.config.from_object('config')
 mail = Mail(app)
+
+@authentication.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(403)
+
+
 
 # login
 @authentication.route('/login', methods=['POST'])
@@ -84,3 +93,54 @@ def verify_email():
     else:
         flash(u'Something went Wrong - Please Try Signing up Again', 'danger')
     return redirect('/')
+
+@authentication.route('/reset_password', methods=['POST', 'GET'])
+def reset_password():
+    if request.method == 'GET':
+        token = request.args.get('token')
+        if not token:
+            return render_template('reset_password.html', step=1)
+        else:
+            user = User.from_token(token)
+            if user:
+                return render_template('reset_password.html', step=2, token=token)
+            else:
+                flash(u'Password Reset Failed', 'danger')
+                return redirect('/')
+
+    elif request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        token = request.form.get('token')
+
+        if email:
+            user = User.from_email(email)
+
+            if not user:
+                flash(u'Failed to Find User', 'danger')
+                return redirect('/')
+
+            reset_link = app.config.get('APP_URL') + 'reset_password?token=' + user.generate_token()
+            msg = Message("Password Reset",
+                          sender="john.fellman@gmail.com",
+                          recipients=[email],
+                          body="Please Click to Reset Your Password: " + reset_link)
+            mail.send(msg)
+            flash(u'Password Email Link has been Sent to Your Email', 'success')
+            return redirect('/')
+
+        elif password and confirm_password and password == confirm_password and token:
+            user = User.from_token(token)
+
+            if user:
+                user.generate_password_hash(password)
+                flash(u'Password Updated Successfully - Please Login', 'success')
+            else:
+                flash(u'Password Update Failed', 'danger')
+
+            return redirect('/')
+
+        else:
+            flash(u'Password Reset Failed', 'danger')
+            return redirect('/')
