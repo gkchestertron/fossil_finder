@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <% users.each(function (user) { %>
-                <tr data-model-id="<%= user.id %>">
+                <tr data-collection-name="users" data-model-id="<%= user.id %>">
                     <td><%= user.id %></td>
                     <td><%= user.get('email') %></td>
                     <td><%= user.get('auth_level') %></td>

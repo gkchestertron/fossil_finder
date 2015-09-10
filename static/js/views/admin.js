@@ -17,13 +17,13 @@ ff.Views.Admin = Backbone.View.extend({
     },
 
     activateUser: function (event) {
-        var user = this.getUser(event);
+        var user = this.getModel(event);
 
         user && user.save({ active: true });
     },
 
     changeGroupName: function (event) {
-        var user = this.getUser(event),
+        var user = this.getModel(event),
             $modal = $('#myModal')
             
         $modal.modal();
@@ -45,7 +45,7 @@ ff.Views.Admin = Backbone.View.extend({
     },
 
     deactivateUser: function (event) {
-        var user = this.getUser(event);
+        var user = this.getModel(event);
 
         user && user.save({ active: false });
     },
@@ -53,7 +53,7 @@ ff.Views.Admin = Backbone.View.extend({
     generateGroupCode: function (event) {
         var text = "",
             possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-            user = this.getUser(event);
+            user = this.getModel(event);
 
         for (var i = 0; i < 5; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -62,11 +62,12 @@ ff.Views.Admin = Backbone.View.extend({
         user.save({ group_code: text });
     },
 
-    getUser: function (event) {
+    getModel: function (event) {
         var $target = $(event.currentTarget),
             $row = $($target.closest('tr')),
             modelId = $row.data('model-id'),
-            model = this.users.get(modelId);
+            collectionName = $row.data('collection-name'),
+            model = this[collectionName].get(modelId);
 
         return model;
     },
