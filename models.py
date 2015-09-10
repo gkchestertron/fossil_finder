@@ -65,7 +65,7 @@ class User(db.Model):
 
     id            = db.Column(db.Integer, primary_key = True)
     auth_level    = db.Column(db.Integer, nullable    = False)
-    group_code    = db.Column(db.String(255))
+    group_code    = db.Column(db.String(255), index=True, unique=True)
     group_name    = db.Column(db.String(255))
     email         = db.Column(db.String(255), index=True, unique=True)
     password_hash = db.Column(db.String(255), index=True)

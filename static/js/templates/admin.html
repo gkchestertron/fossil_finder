@@ -11,6 +11,8 @@
                 <th>Group Code</th>
                 <th>Active</th>
                 <th>Activate/Deactivate</th>
+                <th>Change Group Name</th>
+                <th>Generate Group Code</th>
             </thead>
             <tbody>
                 <% users.each(function (user) { %>
@@ -27,9 +29,31 @@
                     <% } else { %>
                     <td><button class="btn btn-primary" data-function="activateUser">Activate</td>
                     <% } %>
+                    <td><button class="btn btn-primary" data-function="changeGroupName">Change</td>
+                    <td><button class="btn btn-primary" data-function="generateGroupCode">Generate</td>
                 </tr>
                 <% }) %>
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Change Group Name</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <input class="form-control" type="text" placeholder="group name" />
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
 </div>

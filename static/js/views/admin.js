@@ -22,6 +22,19 @@ ff.Views.Admin = Backbone.View.extend({
         user && user.save({ active: true });
     },
 
+    changeGroupName: function (event) {
+        var user = this.getUser(event),
+            $modal = $('#myModal')
+            
+        $modal.modal();
+        $modal.one('click', 'button', function () {
+            // second listener ensures the shade is pulled up
+            $modal.one('hidden.bs.modal', function () {
+                user.save({ group_name: $modal.find('input').val() });
+            });
+        });
+    },
+
     dataFunction: function (event) {
         var $target = $(event.currentTarget),
             func = $target.data('function');
@@ -35,6 +48,18 @@ ff.Views.Admin = Backbone.View.extend({
         var user = this.getUser(event);
 
         user && user.save({ active: false });
+    },
+
+    generateGroupCode: function (event) {
+        var text = "",
+            possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+            user = this.getUser(event);
+
+        for (var i = 0; i < 5; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        user.save({ group_code: text });
     },
 
     getUser: function (event) {
