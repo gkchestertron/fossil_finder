@@ -16,8 +16,6 @@ def csrf_protect():
         if not token or token != request.form.get('_csrf_token'):
             abort(403)
 
-
-
 # login
 @authentication.route('/login', methods=['POST'])
 def login():

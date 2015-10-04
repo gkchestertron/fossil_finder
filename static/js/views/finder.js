@@ -292,6 +292,7 @@ ff.Views.Inspector = ff.Views.Base.extend({
         // TODO: set user id
         this.model.save({
             // formats for mysql - don't worry there is a polyfill in monkey.js
+            complete: true,
             last_accessed_date_time: (new Date()).toISOString().substring(0, 19).replace('T', ' ')
         }, {
             success: this.parent.nextImage.bind(this.parent)
@@ -301,6 +302,7 @@ ff.Views.Inspector = ff.Views.Base.extend({
     saveIncomplete: function (event) {
         this.model.save({
             // formats for mysql - don't worry there is a polyfill in monkey.js
+            complete: false,
             last_accessed_date_time: (new Date()).toISOString().substring(0, 19).replace('T', ' ')
         }, {
             success: this.parent.nextImage.bind(this.parent)

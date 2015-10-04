@@ -1,40 +1,78 @@
 <div class="row">
     <div class="col-xs-10 col-xs-offset-1">
-        <h1>Users (<%= users.length %>)</h1>
-        <table class="table table-striped">
-            <thead>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Auth Level</th>
-                <th>Verified</th>
-                <th>Group Name</th>
-                <th>Group Code</th>
-                <th>Active</th>
-                <th>Activate/Deactivate</th>
-                <th>Change Group Name</th>
-                <th>Generate Group Code</th>
-            </thead>
-            <tbody>
-                <% users.each(function (user) { %>
-                <tr data-collection-name="users" data-model-id="<%= user.id %>">
-                    <td><%= user.id %></td>
-                    <td><%= user.get('email') %></td>
-                    <td><%= user.get('auth_level') %></td>
-                    <td><%= user.get('verified') %></td>
-                    <td><%= user.get('group_name') %></td>
-                    <td><%= user.get('group_code') %></td>
-                    <td><%= user.get('active') %></td>
-                    <% if (user.get('active')) { %>
-                    <td><button class="btn btn-danger" data-function="deactivateUser">Deactivate</td>
-                    <% } else { %>
-                    <td><button class="btn btn-primary" data-function="activateUser">Activate</td>
-                    <% } %>
-                    <td><button class="btn btn-primary" data-function="changeGroupName">Change</td>
-                    <td><button class="btn btn-primary" data-function="generateGroupCode">Generate</td>
-                </tr>
-                <% }) %>
-            </tbody>
-        </table>
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
+        <li role="presentation"><a href="#refs" aria-controls="refs" role="tab" data-toggle="tab">Refs</a></li>
+        <li role="presentation"><a href="#categories" aria-controls="categories" role="tab" data-toggle="tab">Categories</a></li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="users">
+            <h1>Users (<%= users.length %>)</h1>
+            <table class="table table-striped">
+                <thead>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>Auth Level</th>
+                    <th>Verified</th>
+                    <th>Group Name</th>
+                    <th>Group Code</th>
+                    <th>Active</th>
+                    <th>Activate/Deactivate</th>
+                    <th>Change Group Name</th>
+                    <th>Generate Group Code</th>
+                </thead>
+                <tbody>
+                    <% users.each(function (user) { %>
+                    <tr data-collection-name="users" data-model-id="<%= user.id %>">
+                        <td><%= user.id %></td>
+                        <td><%= user.get('email') %></td>
+                        <td><%= user.get('auth_level') %></td>
+                        <td><%= user.get('verified') %></td>
+                        <td><%= user.get('group_name') %></td>
+                        <td><%= user.get('group_code') %></td>
+                        <td><%= user.get('active') %></td>
+                        <% if (user.get('active')) { %>
+                        <td><button class="btn btn-danger" data-function="deactivateUser">Deactivate</td>
+                        <% } else { %>
+                        <td><button class="btn btn-primary" data-function="activateUser">Activate</td>
+                        <% } %>
+                        <td><button class="btn btn-primary" data-function="changeGroupName">Change</td>
+                        <td><button class="btn btn-primary" data-function="generateGroupCode">Generate</td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="refs">
+            <h1>Refs (<%= refs.length %>)</h1>
+            <table class="table table-striped">
+                <thead>
+                    <th>Image Path</th>
+                    <th>Last Accessed User Id</th>
+                    <th>Last Accessed Date/Time</th>
+                    <th>Completed By Id</th>
+                    <th>Failed to Load</th>
+                </thead>
+                <tbody>
+                    <% refs.each(function (ref) { %>
+                    <tr data-collection-name="refs" data-model-id="<%= ref.id %>">
+                        <% var path = ref.get('img') && ref.get('img').href %>
+                        <td><a href="<%= path %>" target="_blank"><%= path %></a></td>
+                        <td><%= ref.get('last_accessed_user_id') %></td>
+                        <td><%= ref.get('last_accessed_date_time') %></td>
+                        <td><%= ref.get('completed_by_user_id') %></td>
+                        <td><%= ref.get('failed_to_load') %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="categories">
+        
+        </div>
+      </div>
     </div>
 </div>
 
