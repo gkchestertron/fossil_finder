@@ -44,8 +44,8 @@ def set_user_ids(search_params=None, **kw):
     complete = request.json.get('complete')
     if complete:
         request.json['completed_by_user_id'] = g.current_user.id
+        del request.json['complete']
     request.json['last_accessed_user_id'] = g.current_user.id
-    del request.json['complete']
    
 # Create the Flask-Restless API manager.
 api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=models.db)
@@ -60,11 +60,12 @@ categories = api_manager.create_api_blueprint(
 
 refs = api_manager.create_api_blueprint(
     models.Ref, 
-    methods=['GET','PUT'], 
+    methods=['GET','PUT', 'DELETE'], 
     collection_name='refs', 
     preprocessors = {
         'GET_MANY'     : [refs_get_many_preprocessor],
-        'PATCH_SINGLE' : [logged_in, set_user_ids]},
+        'PATCH_SINGLE' : [logged_in, set_user_ids],
+        'DELETE_SINGLE' : [is_admin]},
     include_methods=['img.href', 'tags.category'],
     results_per_page=None)
 

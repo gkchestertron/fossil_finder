@@ -28,7 +28,13 @@
                     <tr data-collection-name="users" data-model-id="<%= user.id %>">
                         <td><%= user.id %></td>
                         <td><%= user.get('email') %></td>
-                        <td><%= user.get('auth_level') %></td>
+                        <td>
+                            <select name="auth-level">
+                                <% for (var i = 1; i < 4; i++) { %>
+                                <option value="<%= i %>" <%= user.get('auth_level') === i ? 'selected' : '' %>><%= i %></option>
+                                <% } %>
+                            </select>
+                        </td>
                         <td><%= user.get('verified') %></td>
                         <td><%= user.get('group_name') %></td>
                         <td><%= user.get('group_code') %></td>
@@ -50,20 +56,26 @@
             <table class="table table-striped">
                 <thead>
                     <th>Image Path</th>
+                    <th>Ref Path</th>
                     <th>Last Accessed User Id</th>
                     <th>Last Accessed Date/Time</th>
                     <th>Completed By Id</th>
                     <th>Failed to Load</th>
+                    <th>Number of Tags</th>
+                    <th>Delete</th>
                 </thead>
                 <tbody>
                     <% refs.each(function (ref) { %>
                     <tr data-collection-name="refs" data-model-id="<%= ref.id %>">
                         <% var path = ref.get('img') && ref.get('img').href %>
                         <td><a href="<%= path %>" target="_blank"><%= path %></a></td>
+                        <td><a href="/finder/<%= ref.id %>">/finder/<%= ref.id %></a></td>
                         <td><%= ref.get('last_accessed_user_id') %></td>
                         <td><%= ref.get('last_accessed_date_time') %></td>
                         <td><%= ref.get('completed_by_user_id') %></td>
                         <td><%= ref.get('failed_to_load') %></td>
+                        <td><%= ref.get('tags') && ref.get('tags').length %></td>
+                        <td><button class="btn btn-danger" data-function="deleteRef">Delete</button></td>
                     </tr>
                     <% }) %>
                 </tbody>

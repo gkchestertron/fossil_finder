@@ -1,6 +1,7 @@
 ff.Views.Admin = Backbone.View.extend({
     events: {
-        'click [data-function]': 'dataFunction'
+        'click [data-function]': 'dataFunction',
+        'change select[name="auth-level"]': 'changeAuthLevel'
     },
 
     initialize: function (options) {
@@ -12,7 +13,7 @@ ff.Views.Admin = Backbone.View.extend({
         ];
         
         for (var i in this.collections) {
-            this.listenTo(this.collections[i], 'sync error', this.render);
+            this.listenTo(this.collections[i], 'destroy sync error', this.render);
         }
     },
 
@@ -20,6 +21,14 @@ ff.Views.Admin = Backbone.View.extend({
         var user = this.getModel(event);
 
         user && user.save({ active: true });
+    },
+    
+    changeAuthLevel: function (event) {
+        var model = this.getModel(event),
+            authLevel = $(event.currentTarget).val();
+
+        model.save({ auth_level: authLevel });
+
     },
 
     changeGroupName: function (event) {
@@ -48,6 +57,12 @@ ff.Views.Admin = Backbone.View.extend({
         var user = this.getModel(event);
 
         user && user.save({ active: false });
+    },
+
+    deleteRef: function (event) {
+        var model = this.getModel(event);
+
+        model.destroy();
     },
 
     generateGroupCode: function (event) {

@@ -13,7 +13,9 @@ app.config.from_object('config')
 
 # main page
 @static.route('/')
-def index():
+@static.route('/finder')
+@static.route('/finder/<id>')
+def index(id=None):
     current_user = None
     if session.get('token'):
         current_user = User.from_token(session.get('token'))

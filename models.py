@@ -29,8 +29,8 @@ class Ref(db.Model):
     __tablename__ = 'fossil_finder_img_refs'
     id                      = db.Column(db.Integer, primary_key = True)
     seq_num                 = db.Column(INTEGER(unsigned=True), index = True, nullable = False, unique = True)
-    img                     = db.relationship('Img', primaryjoin='Ref.seq_num==foreign(Img.seq_num)', uselist=False)
-    tags                    = db.relationship('Tag', primaryjoin='Ref.id==foreign(Tag.img_ref_id)')
+    img                     = db.relationship('Img', primaryjoin='Ref.seq_num==foreign(Img.seq_num)', passive_deletes=True, uselist=False)
+    tags                    = db.relationship('Tag', primaryjoin='Ref.id==foreign(Tag.img_ref_id)', cascade='all')
     last_accessed_user_id   = db.Column(db.Integer, index = True)
     last_accessed_date_time = db.Column(db.DateTime, index = True)
     completed_by_user_id    = db.Column(db.Integer, index = True)
@@ -47,7 +47,7 @@ class Tag(db.Model):
     width               = db.Column(db.Float)
     height              = db.Column(db.Float)
     img_tag_category_id = db.Column(db.Integer)
-    category            = db.relationship('Category', primaryjoin='Tag.img_tag_category_id==foreign(Category.id)', uselist=False)
+    category            = db.relationship('Category', primaryjoin='Tag.img_tag_category_id==foreign(Category.id)', uselist=False, passive_deletes=True)
 
 class Category(db.Model):
     __tablename__ = 'fossil_finder_img_tag_categories'

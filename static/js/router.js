@@ -4,8 +4,10 @@ ff.Router = Backbone.Router.extend({
     },
 
     routes: {
-        '': 'finder',
-        'admin': 'admin'
+        ''           : 'finder',
+        'finder/:id' : 'finder',
+        'finder'     : 'finder',
+        'admin'      : 'admin'
     },
 
     _swapView: function (view) {
@@ -45,17 +47,35 @@ ff.Router = Backbone.Router.extend({
         }
     },
 
-    finder: function () {
-        var self = this;
+    finder: function (id) {
+        var self = this,
+            model;
         
-        ff.refs.fetch({
-            success: function () {
-                var view = new ff.Views.Finder({
-                        model: ff.refs.first()
-                    });
+        if (id) {
+            model = new ff.Models.Ref({ id: id });
+            model.fetch({
+                success: function () {
+                    var view = new ff.Views.Finder({
+                            model: model
+                        });
 
-                self._swapView(view);
-            }
-        });
+                    self._swapView(view);
+                },
+                error: function () {
+                    ff.router.navigate('/finder', { trigger: true });
+                }
+            });
+        }
+        else {
+            ff.refs.fetch({
+                success: function () {
+                    var view = new ff.Views.Finder({
+                            model: ff.refs.first()
+                        });
+
+                    self._swapView(view);
+                }
+            });
+        } 
     }
 });
