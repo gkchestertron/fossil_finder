@@ -1,8 +1,6 @@
 from flask import Flask, request, session, g, redirect, abort
-import static
-import authentication
 import api
-import admin
+from blueprints import static, authentication, admin
 import bcrypt
 from models import User
 from flask.ext.assets import Environment, Bundle
