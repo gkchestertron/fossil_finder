@@ -7,7 +7,8 @@ ff.Router = Backbone.Router.extend({
         ''           : 'finder',
         'finder/:id' : 'finder',
         'finder'     : 'finder',
-        'admin'      : 'admin'
+        'admin'      : 'admin',
+        'admin/:tab' : 'admin'
     },
 
     _swapView: function (view) {
@@ -17,7 +18,7 @@ ff.Router = Backbone.Router.extend({
         view.render();
     }, 
 
-    admin: function () {
+    admin: function (tab) {
         var self      = this,
             loadCount = 0,
             users = new ff.Collections.Users(),
@@ -29,6 +30,7 @@ ff.Router = Backbone.Router.extend({
                 refs: refs,
                 categories: categories,
                 tags: tags,
+                tab: tab || 'users'
             });
 
         // set refs url to fetch all

@@ -20,6 +20,7 @@ def is_admin(func):
     return decorated
 
 @admin.route('/admin')
+@admin.route('/admin/<path>')
 @is_admin
-def get_admin():
+def get_admin(path=None):
     return render_template('admin.html', current_user=g.current_user)

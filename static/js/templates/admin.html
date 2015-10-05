@@ -2,13 +2,13 @@
     <div class="col-xs-10 col-xs-offset-1">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
-        <li role="presentation"><a href="#refs" aria-controls="refs" role="tab" data-toggle="tab">Refs</a></li>
-        <li role="presentation"><a href="#categories" aria-controls="categories" role="tab" data-toggle="tab">Categories</a></li>
+          <li role="presentation" class="<%= tab === 'users' ? 'active' : '' %>"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
+        <li role="presentation" class="<%= tab === 'refs' ? 'active' : '' %>"><a href="#refs" aria-controls="refs" role="tab" data-toggle="tab">Refs</a></li>
+        <li role="presentation" class="<%= tab === 'categories' ? 'active' : '' %>"><a href="#categories" aria-controls="categories" role="tab" data-toggle="tab">Categories</a></li>
       </ul>
       <!-- Tab panes -->
       <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="users">
+          <div role="tabpanel" class="tab-pane <%= tab === 'users' ? 'active' : '' %>" id="users">
             <h1>Users (<%= users.length %>)</h1>
             <table class="table table-striped">
                 <thead>
@@ -51,7 +51,7 @@
                 </tbody>
             </table>
         </div>
-        <div role="tabpanel" class="tab-pane" id="refs">
+        <div role="tabpanel" class="tab-pane <%= tab === 'refs' ? 'active' : '' %>" id="refs">
             <h1>Refs (<%= refs.length %>)</h1>
             <table class="table table-striped">
                 <thead>
@@ -75,14 +75,34 @@
                         <td><%= ref.get('completed_by_user_id') %></td>
                         <td><%= ref.get('failed_to_load') %></td>
                         <td><%= ref.get('tags') && ref.get('tags').length %></td>
-                        <td><button class="btn btn-danger" data-function="deleteRef">Delete</button></td>
+                        <td><button class="btn btn-danger" data-function="deleteModel">Delete</button></td>
                     </tr>
                     <% }) %>
                 </tbody>
             </table>
         </div>
-        <div role="tabpanel" class="tab-pane" id="categories">
-        
+        <div role="tabpanel" class="tab-pane <%= tab === 'categories' ? 'active' : '' %>" id="categories">
+        <h1>Categories</h1>
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Delete</th>
+                </thead>
+                <tbody>
+                    <% categories.each(function (cat) { %>
+                    <tr data-collection-name="categories" data-model-id="<%= cat.id %>">
+                        <td><%= cat.get('name') %></td>
+                        <td><button class="btn btn-danger" data-function="deleteModel">Delete</button></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <form>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="name" placeholder="add a new category"/>
+                </div>
+                <button class="btn btn-primary" data-function="createCategory">Add Category</button>
+            </form>
         </div>
       </div>
     </div>

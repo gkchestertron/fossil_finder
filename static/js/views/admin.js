@@ -1,7 +1,8 @@
 ff.Views.Admin = Backbone.View.extend({
     events: {
         'click [data-function]': 'dataFunction',
-        'change select[name="auth-level"]': 'changeAuthLevel'
+        'change select[name="auth-level"]': 'changeAuthLevel',
+        'click a[role="tab"]': 'updateTabNav'
     },
 
     initialize: function (options) {
@@ -9,9 +10,11 @@ ff.Views.Admin = Backbone.View.extend({
             this.users      = options.users,
             this.refs       = options.refs,
             this.tags       = options.tags,
-            this.categories = options.categories
+            this.categories = options.categories,
         ];
         
+        this.activeTab = options.tab;
+
         for (var i in this.collections) {
             this.listenTo(this.collections[i], 'destroy sync error', this.render);
         }
@@ -44,6 +47,17 @@ ff.Views.Admin = Backbone.View.extend({
         });
     },
 
+    createCategory: function (event) {
+        var $button = $(event.currentTarget),
+            $form = $button.closest('form'),
+            $input = $form.find('input'),
+            name = $input.val(),
+            cat;
+
+        event.preventDefault();
+        cat = this.categories.create({ name: name });
+    },
+
     dataFunction: function (event) {
         var $target = $(event.currentTarget),
             func = $target.data('function');
@@ -59,7 +73,7 @@ ff.Views.Admin = Backbone.View.extend({
         user && user.save({ active: false });
     },
 
-    deleteRef: function (event) {
+    deleteModel: function (event) {
         var model = this.getModel(event);
 
         model.destroy();
@@ -92,7 +106,16 @@ ff.Views.Admin = Backbone.View.extend({
             users      : this.users,
             refs       : this.refs,
             tags       : this.tags,
-            categories : this.categories
+            categories : this.categories,
+            tab        : this.activeTab
         }));
+    },
+
+    updateTabNav: function (event) {
+        var $a = $(event.currentTarget),
+            tab = $a.prop('href').split('#')[1];
+
+        this.activeTab = tab;
+        ff.router.navigate('/admin/' + tab, { trigger: false, replace: true });
     }
 });

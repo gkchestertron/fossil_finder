@@ -54,7 +54,10 @@ api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=models.db)
 # don't forget to register the blueprint in app.py
 categories = api_manager.create_api_blueprint(
     models.Category, 
-    methods=['GET'], 
+    methods=['GET', 'DELETE', 'POST'], 
+    preprocessors = {
+        'DELETE_SINGLE': [is_admin],
+        'PATCH_SINGLE': [is_admin]},
     collection_name='categories',
     results_per_page=None)
 
@@ -63,8 +66,8 @@ refs = api_manager.create_api_blueprint(
     methods=['GET','PUT', 'DELETE'], 
     collection_name='refs', 
     preprocessors = {
-        'GET_MANY'     : [refs_get_many_preprocessor],
-        'PATCH_SINGLE' : [logged_in, set_user_ids],
+        'GET_MANY'      : [refs_get_many_preprocessor],
+        'PATCH_SINGLE'  : [logged_in, set_user_ids],
         'DELETE_SINGLE' : [is_admin]},
     include_methods=['img.href', 'tags.category'],
     results_per_page=None)
