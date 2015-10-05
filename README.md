@@ -13,10 +13,7 @@ These are the steps I followed to get my mac setup to run this project:
 1. create database
  - mysql> create DATABASE fossil\_finder;
 1. import db file as fossil\_finder db
- - $ mysql -u root -p fossil\_finder < img\_fossil\_project\_20150507.sql
+ - $ mysql -u root -p fossil\_finder < util/img\_fossil\_project\_20150507.sql
 1. grant privileges to user on fossil\_finder db
  - mysql> GRANT ALL PRIVILEGES ON fossil\_finder.\* TO 'fossil\_finder'@'localhost';
 1. to run app in dev, call 'python app.py' from the command line
-
-deploy TODO:
-1. change email credentials

@@ -1,3 +1,5 @@
+#TODO change __tablename__
+
 from db import db
 
 # class for images from existing db
