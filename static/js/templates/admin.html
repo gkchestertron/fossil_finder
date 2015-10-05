@@ -30,8 +30,9 @@
                         <td><%= user.get('email') %></td>
                         <td>
                             <select name="auth-level">
-                                <% for (var i = 1; i < 4; i++) { %>
-                                <option value="<%= i %>" <%= user.get('auth_level') === i ? 'selected' : '' %>><%= i %></option>
+                                <% var levels = { 1: '1 - Basic User', 2: '2 - Expert User', 3: '3 - Admin User' } %>
+                                <% for (var i in levels) { %>
+                                <option value="<%= i %>" <%= user.get('auth_level') == i ? 'selected' : '' %>><%= levels[i] %></option>
                                 <% } %>
                             </select>
                         </td>
