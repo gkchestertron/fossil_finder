@@ -2,7 +2,9 @@ ff.Views.Admin = Backbone.View.extend({
     events: {
         'click [data-function]': 'dataFunction',
         'change select[name="auth-level"]': 'changeAuthLevel',
-        'click a[role="tab"]': 'updateTabNav'
+        'change input[name="page-number"]': 'refsGotoPageNumber',
+        'click a[role="tab"]': 'updateTabNav',
+        'click [data-comparator]': 'sortCollection'
     },
 
     initialize: function (options) {
@@ -116,6 +118,30 @@ ff.Views.Admin = Backbone.View.extend({
         return model;
     },
 
+    refsGotoPageNumber: function (event) {
+        var $input = $(event.currentTarget),
+            page_number = $input.val();
+
+        if (page_number > 0 && page_number <= this.refs.paging.total_pages) {
+            this.refs.paging.page_number = page_number;
+            this.refs.fetch();
+        }
+    },
+
+    refsNextPage: function (event) {
+        if (this.refs.paging.page_number <= this.refs.paging.total_pages) {
+            this.refs.paging.page_number++;
+            this.refs.fetch();
+        }
+    },
+
+    refsPreviousPage: function (event) {
+        if (this.refs.paging.page_number > 1) {
+            this.refs.paging.page_number--;
+            this.refs.fetch();
+        }
+    },
+
     render: function () {
         this.$el.html(_.template(ff.templates.get('admin'))({
             users      : this.users,
@@ -124,6 +150,30 @@ ff.Views.Admin = Backbone.View.extend({
             categories : this.categories,
             tab        : this.activeTab
         }));
+    },
+
+    sortCollection: function (event) {
+        var $th = $(event.currentTarget),
+            $thead = $th.closest('thead'),
+            collection = $thead.data('collection-name'),
+            comparator = $th.data('comparator'),
+            comparatorSplit = comparator.split('-');
+
+        if (this[collection].sortedBy === comparator) {
+            this[collection].models.reverse();
+        }
+        else {
+            this[collection].sortedBy = comparator;
+            if (comparatorSplit.length > 1) {
+                comparator = function (model) {
+                    return model.get(comparatorSplit[0])[comparatorSplit[1]];
+                }
+            }
+            this[collection].comparator = comparator;
+            this[collection].sort();
+        }
+
+        this.render();
     },
 
     updateTabNav: function (event) {

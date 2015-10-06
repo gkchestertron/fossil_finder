@@ -34,7 +34,7 @@ ff.Router = Backbone.Router.extend({
             });
 
         // set refs url to fetch all
-        refs.url = '/api/refs?all=true'
+        refs.fetchAll = true;
 
         users.fetch({ success: callback });
         refs.fetch({ success: callback });
@@ -53,6 +53,8 @@ ff.Router = Backbone.Router.extend({
         var self = this,
             model;
         
+        ff.refs.fetchAll = false;
+
         if (id) {
             model = new ff.Models.Ref({ id: id });
             model.fetch({

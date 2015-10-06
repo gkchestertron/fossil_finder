@@ -11,6 +11,6 @@ refs = api_manager.create_api_blueprint(
         'PATCH_SINGLE'  : [logged_in, set_user_ids],
         'DELETE_SINGLE' : [is_admin]},
     include_methods=['img.href', 'tags.category'],
-    results_per_page=None)
+    results_per_page=20);
 
 

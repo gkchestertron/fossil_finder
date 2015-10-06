@@ -11,17 +11,17 @@
           <div role="tabpanel" class="tab-pane <%= tab === 'users' ? 'active' : '' %>" id="users">
             <h1>Users (<%= users.length %>)</h1>
             <table class="table table-striped">
-                <thead>
-                    <th>Id</th>
-                    <th>Email</th>
-                    <th>Auth Level</th>
-                    <th>Verified</th>
-                    <th>Group Name</th>
-                    <th>Group Code</th>
-                    <th>Active</th>
-                    <th>Activate/Deactivate</th>
-                    <th>Change Group Name</th>
-                    <th>Generate Group Code</th>
+                <thead data-collection-name="users">
+                    <th data-comparator="id">Id</th>
+                    <th data-comparator="email">Email</th>
+                    <th data-comparator="auth_level">Auth Level</th>
+                    <th data-comparator="verified">Verified</th>
+                    <th data-comparator="group_name">Group Name</th>
+                    <th data-comparator="group_code">Group Code</th>
+                    <th data-comparator="active">Active</th>
+                    <th data-comparator="">Activate/Deactivate</th>
+                    <th data-comparator="">Change Group Name</th>
+                    <th data-comparator="">Generate Group Code</th>
                 </thead>
                 <tbody>
                     <% users.each(function (user) { %>
@@ -53,16 +53,20 @@
             </table>
         </div>
         <div role="tabpanel" class="tab-pane <%= tab === 'refs' ? 'active' : '' %>" id="refs">
-            <h1>Refs (<%= refs.length %>)</h1>
+            <h1>Refs (<%= refs.paging.total_records %>)</h1>
+            <button class="btn btn-default" data-function="refsPreviousPage">Previous Page</button> 
+            <input type="text" name="page-number" size="<%= refs.paging.total_pages.toString().length %>" value="<%= refs.paging.page_number %>" /> of <%= refs.paging.total_pages %>
+            <button class="btn btn-default" data-function="refsNextPage">Next Page</button>
+
             <table class="table table-striped">
-                <thead>
-                    <th>Image Path</th>
-                    <th>Ref Path</th>
-                    <th>Last Accessed User Id</th>
-                    <th>Last Accessed Date/Time</th>
-                    <th>Completed By Id</th>
-                    <th>Failed to Load</th>
-                    <th>Number of Tags</th>
+                <thead data-collection-name="refs">
+                    <th data-comparator="img-href">Image Path</th>
+                    <th data-comparator="id">Ref Path</th>
+                    <th data-comparator="last_accessed_user_id">Last Accessed User Id</th>
+                    <th data-comparator="last_accessed_date_time">Last Accessed Date/Time</th>
+                    <th data-comparator="completed_by_user_id">Completed By Id</th>
+                    <th data-comparator="failed_to_load">Failed to Load</th>
+                    <th data-comparator="tags-length">Number of Tags</th>
                     <th>Delete</th>
                 </thead>
                 <tbody>
