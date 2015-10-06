@@ -54,9 +54,17 @@
         </div>
         <div role="tabpanel" class="tab-pane <%= tab === 'refs' ? 'active' : '' %>" id="refs">
             <h1>Refs (<%= refs.paging.total_records %>)</h1>
-            <button class="btn btn-default" data-function="refsPreviousPage">Previous Page</button> 
-            <input type="text" name="page-number" size="<%= refs.paging.total_pages.toString().length %>" value="<%= refs.paging.page_number %>" /> of <%= refs.paging.total_pages %>
-            <button class="btn btn-default" data-function="refsNextPage">Next Page</button>
+
+            <div class="input-group col-xs-4">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" data-function="refsPreviousPage">Previous Page</button> 
+                </span>
+                <input type="text" class="form-control" name="page-number" value="<%= refs.paging.page_number %>" />
+                <div class="input-group-btn">
+                     <button class="btn btn-default">of <%= refs.paging.total_pages %></button>
+                    <button class="btn btn-primary" data-function="refsNextPage">Next Page</button>
+                </div>
+            </div>
 
             <table class="table table-striped">
                 <thead data-collection-name="refs">
