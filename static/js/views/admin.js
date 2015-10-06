@@ -48,14 +48,29 @@ ff.Views.Admin = Backbone.View.extend({
     },
 
     createCategory: function (event) {
-        var $button = $(event.currentTarget),
-            $form = $button.closest('form'),
-            $input = $form.find('input'),
-            name = $input.val(),
-            cat;
+        var $button  = $(event.currentTarget),
+            $form    = $button.closest('form'),
+            $input   = $form.find('input[name   = "name"]'),
+            name     = $input.val(),
+            $file    = $form.find('input[type   = "file"]'),
+            file     = $file[0].files[0],
+            filename = file.name,
+            data     = new FormData();
 
         event.preventDefault();
-        cat = this.categories.create({ name: name });
+
+        data.append('file', file);
+
+        this.categories.create({ name: name, filename: filename });
+
+        $.ajax({
+            url: '/upload',  //server script to process data
+            type: 'POST',
+            data: data,
+            processData: false,
+            cache: false,
+            contentType: false
+        });
     },
 
     dataFunction: function (event) {

@@ -87,19 +87,24 @@
             <table class="table table-striped">
                 <thead>
                     <th>Name</th>
+                    <th>Filename</th>
                     <th>Delete</th>
                 </thead>
                 <tbody>
                     <% categories.each(function (cat) { %>
                     <tr data-collection-name="categories" data-model-id="<%= cat.id %>">
                         <td><%= cat.get('name') %></td>
+                        <td><a target="_self" href="/static/images/<%= cat.get('filename') %>"><%= cat.get('filename') %></a></td>
                         <td><button class="btn btn-danger" data-function="deleteModel">Delete</button></td>
                     </tr>
                     <% }) %>
                 </tbody>
             </table>
             <form>
-                <div class="form-group">
+                <span class="btn btn-default btn-file col-xs-4">
+                    Browse <input type="file">
+                </span>
+                <div class="form-group col-xs-4">
                     <input class="form-control" type="text" name="name" placeholder="add a new category"/>
                 </div>
                 <button class="btn btn-primary" data-function="createCategory">Add Category</button>

@@ -1,4 +1,5 @@
 venv
+static/images/*
 static/build/*
 static/.webassets-cache/*
 *.pyc

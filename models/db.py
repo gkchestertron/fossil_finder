@@ -7,6 +7,3 @@ from sqlalchemy.dialects.mysql import INTEGER # need this for constraints
 app = Flask(__name__)
 app.config.from_object('config')
 db = flask.ext.sqlalchemy.SQLAlchemy(app)
-
-# make all the things
-db.create_all()

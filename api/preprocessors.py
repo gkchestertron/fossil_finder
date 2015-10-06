@@ -1,19 +1,34 @@
 # TODO add auth and block access based on auth level
-from flask import Flask, g, session, request, abort
+from flask import Flask, g, session, request, abort, send_from_directory
 from models import Ref, Img, User, db
 from sqlalchemy import and_
+from werkzeug import secure_filename
+import os
+
+app = Flask(__name__)
+app.config.from_object('config')
 
 def refs_get_many_preprocessor(search_params=None, **kw):
     if request.args.get('all'):
         return
-    ref = Ref.query.filter(and_(Ref.last_accessed_date_time == None, Ref.failed_to_load == None)).first()
+
+    user = User.from_token(session.get('token'))
+
+    if user and user.active and user.auth_level > 1:
+        ref = Ref.query.filter(and_( Ref.completed_by_user_id == None, Ref.failed_to_load == None)).first()
+    else:
+        ref = Ref.query.filter(and_( Ref.last_accessed_date_time == None, Ref.failed_to_load == None)).first()
+
     if not ref: # creates a new ref based on first image that doesn't have a corresponding ref
         img = Img.query.filter(Img.ref == None).first()
         ref = Ref(seq_num = img.seq_num)
-    db.session.add(ref)
-    db.session.commit()
+        try:
+            db.session.add(ref)
+            db.session.commit()
+        except:
+            db.session.rollback()
+
     search_params['filters'] = [{ 'name': 'id', 'op': 'eq', 'val': ref.id }]
-    db.session.close_all()
 
 def logged_in(search_params=None, **kw):
     if not session.get('token'):
@@ -35,5 +50,11 @@ def set_user_ids(search_params=None, **kw):
     complete = request.json.get('complete')
     if complete:
         request.json['completed_by_user_id'] = g.current_user.id
+    if complete or complete == False:
         del request.json['complete']
     request.json['last_accessed_user_id'] = g.current_user.id
+
+def filter_filename(search_params=None, **kw):
+    filename = request.json.get('filename')
+    if filename:
+        request.json['filename'] = secure_filename(filename)

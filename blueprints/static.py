@@ -37,5 +37,3 @@ def templates():
         file.close()
 
     return jsonify(response)
-    
-    

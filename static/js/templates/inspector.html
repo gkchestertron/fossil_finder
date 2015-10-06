@@ -9,7 +9,7 @@
                     <h3 class="panel-title dropdown-toggle" data-toggle="dropdown">category: <%= category && category.name || 'unspecified' %></h3>
                     <ul class="dropdown-menu">
                         <% ff.categories.each(function (category) { %>
-                        <li><a data-category-id="<%= category.id %>" data-tag-id="<%= tag.id %>"><%= category.get('name') %></a></li>
+                        <li><a data-category-id="<%= category.id %>" data-tag-id="<%= tag.id %>"><%= category.get('name') %></a><img class="category-image" src="/static/images/<%= category.get('filename') %>" /></li>
                         <% }) %>
                     </ul>
                 </div>

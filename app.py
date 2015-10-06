@@ -2,12 +2,17 @@ from flask import Flask, request, session, g, redirect, abort
 import api
 from blueprints import static, authentication, admin
 import bcrypt
-from models import User
+from models import User, db
 from flask.ext.assets import Environment, Bundle
+from werkzeug import secure_filename
+import os
 
 # Create the Flask application
 app = Flask(__name__)
 app.config.from_object('config')
+
+# create any tables that don't yet exist
+db.create_all()
 
 def generate_csrf_token():
     if '_csrf_token' not in session:
@@ -56,6 +61,19 @@ app.register_blueprint(api.categories, session=session, g=g)
 app.register_blueprint(api.tags, session=session, g=g)
 app.register_blueprint(api.imgs, session=session, g=g)
 app.register_blueprint(api.users, session=session, g=g)
+
+# upload route
+@app.route('/upload', methods=['POST'])
+def file_upload(search_params=None, **kw):
+    user = User.from_token(session.get('token'))
+
+    if user and user.auth_level < 3:
+        abort(400)
+
+    file = request.files.get('file')
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config['APP_IMAGE_FOLDER'], filename))
+    return '', 200
 
 # start the flask loop
 if __name__ == '__main__':
