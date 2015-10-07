@@ -49,7 +49,7 @@ ff.Views.Admin = Backbone.View.extend({
         });
     },
 
-    createCategory: function (event) {
+    updateCategory: function (event) {
         var $button  = $(event.currentTarget),
             $form    = $button.closest('form'),
             $input   = $form.find('input[name   = "name"]'),
@@ -57,13 +57,20 @@ ff.Views.Admin = Backbone.View.extend({
             $file    = $form.find('input[type   = "file"]'),
             file     = $file[0].files[0],
             filename = file.name,
-            data     = new FormData();
+            data     = new FormData(),
+            create   = $button.data('create');
 
         event.preventDefault();
 
         data.append('file', file);
 
-        this.categories.create({ name: name, filename: filename });
+        if (create) {
+            this.categories.create({ name: name, filename: filename });
+        }
+        else {
+            model = this.getModel(event);
+            model && model.save({ name: name, filename: filename });
+        }
 
         $.ajax({
             url: '/upload',  //server script to process data

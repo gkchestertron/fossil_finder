@@ -4,9 +4,10 @@ from models import Category
 
 categories = api_manager.create_api_blueprint(
     Category, 
-    methods=['GET', 'DELETE', 'POST'], 
+    methods=['GET', 'DELETE', 'POST', 'PUT'], 
     preprocessors = {
         'DELETE_SINGLE' : [is_admin],
-        'POST'          : [is_admin, filter_filename]},
+        'POST'          : [is_admin, filter_filename],
+        'PATCH_SINGLE'  : [is_admin, filter_filename]},
     collection_name='categories',
     results_per_page=None)
