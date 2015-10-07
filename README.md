@@ -16,4 +16,5 @@ These are the steps I followed to get my mac setup to run this project:
  - $ mysql -u root -p fossil\_finder < util/img\_fossil\_project\_20150507.sql
 1. grant privileges to user on fossil\_finder db
  - mysql> GRANT ALL PRIVILEGES ON fossil\_finder.\* TO 'fossil\_finder'@'localhost';
+1. email me for a copy of config.py
 1. to run app in dev, call 'python app.py' from the command line
