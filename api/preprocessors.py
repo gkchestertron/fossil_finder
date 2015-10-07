@@ -15,7 +15,9 @@ def refs_get_many_preprocessor(search_params=None, **kw):
     user = User.from_token(session.get('token'))
 
     if user and user.active and user.auth_level > 1:
-        ref = Ref.query.filter(and_( Ref.completed_by_user_id == None, Ref.failed_to_load == None)).first()
+        ref = Ref.query.filter(and_( Ref.completed_by_user_id == None, 
+                                     Ref.failed_to_load == None, 
+                                     Ref.last_accessed_user_id != user.id)).first()
     else:
         ref = Ref.query.filter(and_( Ref.last_accessed_date_time == None, Ref.failed_to_load == None)).first()
 

@@ -162,12 +162,16 @@ ff.Views.Admin = Backbone.View.extend({
     sortCollection: function (event) {
         var $th = $(event.currentTarget),
             $thead = $th.closest('thead'),
+            $table = $th.closest('table'),
             collection = $thead.data('collection-name'),
             comparator = $th.data('comparator'),
-            comparatorSplit = comparator.split('-');
+            comparatorString = comparator,
+            comparatorSplit = comparator.split('-'),
+            direction;
 
         if (this[collection].sortedBy === comparator) {
             this[collection].models.reverse();
+            direction = 'up';
         }
         else {
             this[collection].sortedBy = comparator;
@@ -178,9 +182,14 @@ ff.Views.Admin = Backbone.View.extend({
             }
             this[collection].comparator = comparator;
             this[collection].sort();
+            direction = 'down';
         }
 
         this.render();
+
+        // place arrow on newly drawn header
+        this.$('th[data-comparator="' + comparatorString + '"]')
+            .append('<span>' + (direction === 'up' ? '&#8593;' : '&#8595') + '</span>');
     },
 
     updateTabNav: function (event) {
