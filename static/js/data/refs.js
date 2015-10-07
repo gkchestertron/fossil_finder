@@ -40,10 +40,11 @@ ff.Collections.Refs = ff.Collections.Base.extend({
 
         if (this.fetchAll) {
             url += '?all=true';
-        }
 
-        if (this.paging.page_number) {
-            url += ('&page=' + this.paging.page_number);
+            if (this.paging.page_number) {
+                url += /\?/.test('?') ? '&' : '?';
+                url += ('page=' + this.paging.page_number);
+            }
         }
 
         return url;
