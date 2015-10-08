@@ -29,7 +29,7 @@ window.ff = {
                         var href     = $(this).attr("href"),
                             protocol = this.protocol + "//";
 
-                        if (href[0] === "#") {
+                        if (!href || href[0] === "#") {
                             return false;
                         }
 

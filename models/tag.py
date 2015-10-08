@@ -9,6 +9,7 @@ class Tag(db.Model):
     left                = db.Column(db.Float)
     width               = db.Column(db.Float)
     height              = db.Column(db.Float)
+    rotation            = db.Column(db.Float)
     img_tag_category_id = db.Column(db.Integer)
     category            = db.relationship('Category', primaryjoin='Tag.img_tag_category_id==foreign(Category.id)', uselist=False, passive_deletes=True)
 

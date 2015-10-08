@@ -18,8 +18,8 @@ ff.Views.Base = Backbone.View.extend({
     },
 
     getElementPosition: function ($element, scale) {
-        var top = $element.css('top'),
-            left = $element.css('left'),
+        var top    = $element.css('top'),
+            left   = $element.css('left'),
             result = {
                 top:  parseInt(top.slice(0, top.length - 2)),
                 left: parseInt(left.slice(0, left.length -2)),

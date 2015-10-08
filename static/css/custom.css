@@ -3,7 +3,7 @@
     box-shadow: 0 0 10px #fcf8e3;
 }
 
-.active .resizer {
+.active .resizer, .active .rotater {
     color: #fcf8e3;
 }
 
@@ -55,7 +55,7 @@
     margin-bottom: 0px;
 }
 
-.resizer {
+.resizer, .rotater {
     color: white;
     margin: 3px;
     cursor: default;
@@ -64,6 +64,14 @@
 .resizer-wrapper {
     cursor: default;
     bottom: 0px;
+    position: absolute;
+    text-align: right;
+    width: 100%;
+}
+
+.rotater-wrapper {
+    cursor: default;
+    top: 0px;
     position: absolute;
     text-align: right;
     width: 100%;

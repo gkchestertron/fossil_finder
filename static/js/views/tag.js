@@ -1,8 +1,9 @@
 ff.Views.Tag = ff.Views.Base.extend({
     events: {
-        'mousedown .resizer': 'resize',
-        'mousedown': 'move',
-        'click': 'setActive'
+        'mousedown .resizer' : 'resize',
+        'mousedown .rotater' : 'rotate',
+        'mousedown'          : 'move',
+        'click'              : 'setActive'
     },
 
     initialize: function (options) {
@@ -100,12 +101,67 @@ ff.Views.Tag = ff.Views.Base.extend({
         });
     },
 
+    rotate: function (event) {
+        var self   = this,
+            offset = this.$el.offset(),
+            width  = this.$el.width(),
+            height = this.$el.height(),
+            center = {
+                x: offset.left + width/2,
+                y: offset.top + height/2
+            },
+            startX = event.pageX,
+            startY = event.pageY,
+            startAngle = Math.atan2(startY - center.y, startX - center.x) - (this.model.get('rotation') || 0);
+
+            console.log(startAngle);
+
+        event.stopPropagation();
+
+        $(window).on('mousemove', function (event) {
+            var rad = getRoatation(event);
+
+            self.model.set({ rotation: rad });
+            rotateEl(rad);
+        });
+
+        $(window).one('mouseup', function (event) {
+            var rad = getRoatation(event);
+
+            rotateEl(rad);
+            self.model.save({ rotation: rad });
+            $(window).off('mousemove')
+        });
+
+        function getRoatation(event) {
+            var newX = event.pageX,
+                newY = event.pageY,
+                newAngle = Math.atan2(newY - center.y, newX - center.x),
+                angle = newAngle - startAngle;
+
+            return angle;
+        }
+
+        function rotateEl(rad) {
+            self.$el.css({
+                '-ms-transform'     : 'rotate(' + rad + 'rad)', /* IE 9 */
+                '-webkit-transform' : 'rotate(' + rad + 'rad)', /* Chrome, Safari, Opera */
+                'transform'         : 'rotate(' + rad + 'rad)'
+            });
+        }
+    },
+
     scale: function () {
+        var rad = (this.model.get('rotation') || 0);
+
         this.$el.css({
-            top:    this.model.get('top')    * this.parent.scale,
-            left:   this.model.get('left')   * this.parent.scale,
-            width:  this.model.get('width')  * this.parent.scale,
-            height: this.model.get('height') * this.parent.scale
+            top                 : this.model.get('top')    * this.parent.scale,
+            left                : this.model.get('left')   * this.parent.scale,
+            width               : this.model.get('width')  * this.parent.scale,
+            height              : this.model.get('height') * this.parent.scale,
+            '-ms-transform'     : 'rotate(' + rad + 'rad)', /* IE 9 */
+            '-webkit-transform' : 'rotate(' + rad + 'rad)', /* Chrome, Safari, Opera */
+            'transform'         : 'rotate(' + rad + 'rad)'
         });
     },
 
