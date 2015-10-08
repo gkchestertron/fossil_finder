@@ -136,7 +136,7 @@ ff.Views.Admin = Backbone.View.extend({
     },
 
     refsNextPage: function (event) {
-        if (this.refs.paging.page_number <= this.refs.paging.total_pages) {
+        if (this.refs.paging.page_number < this.refs.paging.total_pages) {
             this.refs.paging.page_number++;
             this.refs.fetch();
         }
