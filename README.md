@@ -18,5 +18,5 @@ These are the steps I followed to get my mac setup to run this project:
  - mysql> GRANT ALL PRIVILEGES ON fossil\_finder.\* TO 'fossil\_finder'@'localhost';
 1. rename config\_copy.py to config.py and fill in your email credentials
 1. to run app in dev, call 'python app.py' from the command line
-1. There are sample images in the util folder for testing the upload
 1. You will have to manually change your auth level to 3 in the db to test admin features
+1. There are sample images in the util folder for testing the upload - you'll have to do this before you have categories to tag images with
