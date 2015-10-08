@@ -66,7 +66,18 @@ ff.Views.Finder = ff.Views.Base.extend({
     events: {
         'wheel #current-image-wrapper': 'zoom',
         'mousedown #current-image' : 'drawNewTag', // uses image so click events don't bubble up and make new tags inside tags
-        'mousemove #current-image-wrapper' : 'zoomNav'
+        'mousemove #current-image-wrapper' : 'zoomNav',
+        'mouseenter .category-image': 'explodeCategoryImage'
+    },
+
+    explodeCategoryImage: function (event) {
+        var $img = $(event.currentTarget);
+
+        $img.animate({ height: '200px'}, 'slow');
+
+        $img.one('mouseleave', function () {
+            $img.animate({ height: '50px'}, 'slow');
+        });
     },
 
     initialize: function () {
