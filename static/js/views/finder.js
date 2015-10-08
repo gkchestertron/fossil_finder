@@ -198,13 +198,14 @@ ff.Views.Finder = ff.Views.Base.extend({
     },
 
     zoom: function (event) {
-        var $imageWrapper = $(event.currentTarget),
-            delta         = event.originalEvent.deltaY,
+        var $imageWrapper = $('#current-image-wrapper'),
+            delta         = typeof(event) === 'number' ? event : event.originalEvent.deltaY,
             width         = $imageWrapper.width() + delta,
-            offsetStart   = this.getRelativeOffset(event.originalEvent, $('#current-image-wrapper'), this.scale),
+            originalEvent = typeof(event) === 'number' ? {} : event.originalEvent,
+            offsetStart   = this.getRelativeOffset(originalEvent, $('#current-image-wrapper'), this.scale),
             offsetEnd, offsetDiff, diff;
 
-        event.preventDefault();
+        if (typeof(event) !== 'number') event.preventDefault();
         if (!this.imageLoaded) return;
 
         if (width >= this.finderWidth && width <= this.initialImageWidth) {
@@ -219,7 +220,7 @@ ff.Views.Finder = ff.Views.Base.extend({
 
         this.setScale();
 
-        offsetEnd  = this.getRelativeOffset(event.originalEvent, $('#current-image-wrapper'), this.scale);
+        offsetEnd  = this.getRelativeOffset(originalEvent, $('#current-image-wrapper'), this.scale);
 
         diff = {
             top   : -(offsetEnd.top - offsetStart.top)  * this.scale,
@@ -280,7 +281,9 @@ ff.Views.Inspector = ff.Views.Base.extend({
         'click [data-function=saveComplete]': 'saveComplete',
         'click [data-function=saveIncomplete]': 'saveIncomplete',
         'click .dropdown a': 'setCategory',
-        'click tr': 'setActiveTag'
+        'click tr': 'setActiveTag',
+        'click #zoom-in': 'zoomIn',
+        'click #zoom-out': 'zoomOut'
     },
 
     initialize: function (options) {
@@ -364,5 +367,13 @@ ff.Views.Inspector = ff.Views.Base.extend({
         }, {
             success: self.render.bind(self)
         });
+    },
+
+    zoomIn: function () {
+        this.parent.zoom(500);
+    },
+
+    zoomOut: function () {
+        this.parent.zoom(-500);
     }
 });

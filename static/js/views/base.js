@@ -54,8 +54,8 @@ ff.Views.Base = Backbone.View.extend({
 
     getRelativeOffset: function (event, $element, scale) {
         var offset = $element && $element.offset(),
-            top    = event.pageY,
-            left   = event.pageX;
+            top    = event.pageY || offset.top/2,
+            left   = event.pageX || offset.left/2;
 
         if (offset) {
             top  = top - offset.top;
