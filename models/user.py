@@ -21,7 +21,7 @@ class User(db.Model):
     verified      = db.Column(db.Boolean, nullable=False, default=False)
     active        = db.Column(db.Boolean, nullable=False, default=True)
 
-    def generate_token(self, exp=3600):
+    def generate_token(self, exp=36000):
         s = Serializer(app.config['SERIALIZER_KEY'], expires_in=exp)
         return s.dumps({'id': self.id})
 
