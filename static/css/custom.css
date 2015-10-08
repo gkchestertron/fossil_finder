@@ -89,3 +89,7 @@ th[data-comparator] {
     -ms-user-select: none;
     user-select: none;
 }
+
+#zoom-in, #zoom-out {
+    cursor: pointer;
+}
