@@ -61,12 +61,15 @@ ff.Views.Tag = ff.Views.Base.extend({
     },
 
     resize: function (event) {
-        var self = this,
-            offsetStart = {
+        var self                  = this,
+            offsetStart           = {
                 top: event.pageY,
                 left: event.pageX
             },
             positionStart = this.getElementPosition(this.$el);
+            startHeight   = positionStart.height,
+            startWidth    = positionStart.width,
+            rotation      = self.model.get('rotation') || 0;
 
         event.stopPropagation();
 
@@ -77,10 +80,8 @@ ff.Views.Tag = ff.Views.Base.extend({
                 },
                 diff = self.getOffsetDiff(offsetStart, offsetDrag);
 
-            self.$el.css({
-                width: positionStart.width + diff.left,
-                height: positionStart.height + diff.top
-            });
+            doResize(diff);
+            translateEl();
         });
 
         $(window).one('mouseup', function (event) {
@@ -89,16 +90,70 @@ ff.Views.Tag = ff.Views.Base.extend({
                     left: event.pageX
                 },
                 diff = self.getOffsetDiff(offsetStart, offsetEnd);
-
-            self.$el.css({
-                width: positionStart.width + diff.left,
-                height: positionStart.height + diff.top
-            });
-
+                
+            doResize(diff);
+            translateEl();
             self.model.set(self.getElementPosition(self.$el, self.parent.scale));
             self.model.save();
             $(window).off('mousemove');
         });
+
+        function getTranslation(diff, angle) {
+            var x      = diff.left,
+                y      = diff.top,
+                xPrime = (x * Math.cos(angle)) - (y * Math.sin(angle)),
+                yPrime = (y * Math.cos(angle)) + (x * Math.sin(angle));
+
+            return {
+                x: xPrime,
+                y: yPrime
+            };
+        }
+
+        function doResize(diff) {
+            var translation = getTranslation(diff, -(rotation));
+                height = startHeight + translation.y,
+                width  = startWidth + translation.x;
+
+            if (height < 40) height = 40;
+            if (width  < 40) width  = 40;
+
+            self.$el.css({
+                height : height + 'px',
+                width  : width + 'px',
+            });
+        }
+
+        function translateEl() {
+            var leftStart = {
+                    left: -(positionStart.width/2),
+                    top:  -(positionStart.height/2)
+                },
+                positionNow = self.getElementPosition(self.$el),
+                leftNow = {
+                    left: -(positionNow.width/2),
+                    top:  -(positionNow.height/2)
+                },
+                transStart = getTranslation(leftStart, rotation),
+                transNow   = getTranslation(leftNow, rotation),
+                diffStart  = {
+                    top: positionStart.height/2 + transStart.y,
+                    left: positionStart.width/2 + transStart.x
+                },
+                diffNow  = {
+                    top: positionNow.height/2 + transNow.y,
+                    left: positionNow.width/2 + transNow.x
+                },
+                diffDiff = {
+                    top: diffNow.top - diffStart.top,
+                    left: diffNow.left - diffStart.left
+                };
+
+            self.$el.css({
+                top: positionStart.top - diffDiff.top + 'px',
+                left: positionStart.left - diffDiff.left + 'px',
+            });
+        }
     },
 
     rotate: function (event) {
@@ -114,7 +169,6 @@ ff.Views.Tag = ff.Views.Base.extend({
             startY = event.pageY,
             startAngle = Math.atan2(startY - center.y, startX - center.x) - (this.model.get('rotation') || 0);
 
-            console.log(startAngle);
 
         event.stopPropagation();
 
@@ -138,6 +192,10 @@ ff.Views.Tag = ff.Views.Base.extend({
                 newY = event.pageY,
                 newAngle = Math.atan2(newY - center.y, newX - center.x),
                 angle = newAngle - startAngle;
+
+            if (angle > 2 * Math.PI)  angle -= (2 * Math.PI);
+            if (angle < -2 * Math.PI)  angle += (2 * Math.PI);
+            if (angle < 0) angle = (2 * Math.PI) + angle;
 
             return angle;
         }
