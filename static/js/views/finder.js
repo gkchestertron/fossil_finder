@@ -139,7 +139,8 @@ ff.Views.Finder = ff.Views.Base.extend({
     },
 
     render: function () {
-        var self = this;
+        var self = this,
+            failed_counter = 0;
 
         this.imageLoaded = false;
         this.$el.html(_.template(ff.templates.get('finder'))(self.model.attributes));
@@ -176,6 +177,10 @@ ff.Views.Finder = ff.Views.Base.extend({
             self.inspector.render();
         })
         .error(function () {
+            if (failed_counter < 1) {
+              failed_counter++;
+              $('#current-image').prop('src', '/static/images/failed_to_load.jpeg');
+            }
             self.model.save({ failed_to_load: true }, {
                 success: self.nextImage.bind(self),
                 error: ff.error
