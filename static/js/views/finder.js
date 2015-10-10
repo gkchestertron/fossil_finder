@@ -73,8 +73,10 @@ ff.Views.Finder = ff.Views.Base.extend({
     explodeCategoryImage: function (event) {
         var $img = $(event.currentTarget);
 
-        this.$previousImg && this.$previousImg.animate({ height: '50px'}, 'slow');
-        $img.animate({ height: '200px'}, 'slow');
+        if (this.$previousImg && this.$previousImg.get(0) !== $img.get(0)) {
+            this.$previousImg.animate({ height: '50px'}, 'fast');
+        }
+        $img.animate({ height: '200px'}, 'fast');
         this.$previousImg = $img;
     },
 
