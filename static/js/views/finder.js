@@ -49,6 +49,9 @@ ff.Views.Finder = ff.Views.Base.extend({
                         self.addTag(tagModel);
                         tagModel.view.setActive();
                         tagModel.trigger('dropdown-open', tagModel.cid);
+                        self.inspector.$el.animate({
+                            scrollTop: self.inspector.$el.height()
+                        }, 'fast');
                     }
                 });
             }
@@ -71,12 +74,17 @@ ff.Views.Finder = ff.Views.Base.extend({
     },
 
     explodeCategoryImage: function (event) {
-        var $img = $(event.currentTarget);
+        var self = this,
+            $img = $(event.currentTarget);
 
         if (this.$previousImg && this.$previousImg.get(0) !== $img.get(0)) {
             this.$previousImg.animate({ height: '50px'}, 'fast');
         }
-        $img.animate({ height: '200px'}, 'fast');
+        $img.animate({ height: '200px'}, 'fast', function () {
+            self.inspector.$el.animate({
+                scrollTop: self.inspector.$el.height()
+            }, 'fast');
+        });
         this.$previousImg = $img;
     },
 
