@@ -73,11 +73,9 @@ ff.Views.Finder = ff.Views.Base.extend({
     explodeCategoryImage: function (event) {
         var $img = $(event.currentTarget);
 
+        this.$previousImg && this.$previousImg.animate({ height: '50px'}, 'slow');
         $img.animate({ height: '200px'}, 'slow');
-
-        $img.one('mouseleave', function () {
-            $img.animate({ height: '50px'}, 'slow');
-        });
+        this.$previousImg = $img;
     },
 
     initialize: function () {
@@ -203,7 +201,7 @@ ff.Views.Finder = ff.Views.Base.extend({
     zoom: function (event) {
         var $imageWrapper = $('#current-image-wrapper'),
             delta         = typeof(event) === 'number' ? event : event.originalEvent.deltaY,
-            width         = $imageWrapper.width() + delta,
+            width         = $imageWrapper.width() - delta,
             originalEvent = typeof(event) === 'number' ? {} : event.originalEvent,
             offsetStart   = this.getRelativeOffset(originalEvent, $('#current-image-wrapper'), this.scale),
             offsetEnd, offsetDiff, diff;
