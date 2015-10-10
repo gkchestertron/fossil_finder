@@ -6,4 +6,4 @@ static/.webassets-cache/*
 *.swp
 config.py
 
-!static/image/failed_to_load.jpeg
+!static/images/failed_to_load.jpeg
