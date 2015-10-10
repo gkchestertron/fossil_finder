@@ -23,8 +23,8 @@ ff.Views.Base = Backbone.View.extend({
             result = {
                 top:  parseInt(top.slice(0, top.length - 2)),
                 left: parseInt(left.slice(0, left.length -2)),
-                width: $element.width(),
-                height: $element.height()
+                width: $element.width() + 2,
+                height: $element.height() + 2
             };
 
         if (scale) {

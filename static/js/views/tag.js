@@ -38,6 +38,7 @@ ff.Views.Tag = ff.Views.Base.extend({
                     left: offset.left + diff.left
                 };
 
+            $('#fossil-finder').off('mousemove');
             if (Math.abs(diff.top) > 3 && Math.abs(diff.left) > 3) {
                 self.$el.css(props);
                 self.model.set({
@@ -46,7 +47,6 @@ ff.Views.Tag = ff.Views.Base.extend({
                 });
                 self.model.save();
             }
-            $('#fossil-finder').off('mousemove');
         });       
     },
 
@@ -91,11 +91,11 @@ ff.Views.Tag = ff.Views.Base.extend({
                 },
                 diff = self.getOffsetDiff(offsetStart, offsetEnd);
                 
+            $(window).off('mousemove');
             doResize(diff);
             translateEl();
             self.model.set(self.getElementPosition(self.$el, self.parent.scale));
             self.model.save();
-            $(window).off('mousemove');
         });
 
         function getTranslation(diff, angle) {
@@ -169,7 +169,6 @@ ff.Views.Tag = ff.Views.Base.extend({
             startY = event.pageY,
             startAngle = Math.atan2(startY - center.y, startX - center.x) - (this.model.get('rotation') || 0);
 
-
         event.stopPropagation();
 
         $(window).on('mousemove', function (event) {
@@ -182,9 +181,9 @@ ff.Views.Tag = ff.Views.Base.extend({
         $(window).one('mouseup', function (event) {
             var rad = getRoatation(event);
 
+            $(window).off('mousemove')
             rotateEl(rad);
             self.model.save({ rotation: rad });
-            $(window).off('mousemove')
         });
 
         function getRoatation(event) {
