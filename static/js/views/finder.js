@@ -373,10 +373,10 @@ ff.Views.Inspector = ff.Views.Base.extend({
     },
 
     zoomIn: function () {
-        this.parent.zoom(500);
+        this.parent.zoom(-400);
     },
 
     zoomOut: function () {
-        this.parent.zoom(-500);
+        this.parent.zoom(400);
     }
 });
