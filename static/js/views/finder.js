@@ -125,8 +125,7 @@ ff.Views.Finder = ff.Views.Base.extend({
             success: function () {        
                 self.model = ff.refs.first();
                 self.render();
-            },
-            error: ff.error
+            }
         });
     },
 
