@@ -181,8 +181,7 @@ ff.Views.Finder = ff.Views.Base.extend({
               $('#current-image').prop('src', '/static/images/failed_to_load.jpeg');
             }
             self.model.save({ failed_to_load: true }, {
-                success: self.nextImage.bind(self),
-                error: ff.error
+                success: self.nextImage.bind(self)
             });
         });
     },
