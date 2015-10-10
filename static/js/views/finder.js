@@ -132,6 +132,7 @@ ff.Views.Finder = ff.Views.Base.extend({
         ff.refs.fetch({
             success: function () {        
                 self.model = ff.refs.first();
+                ff.router.navigate('/finder/' + self.model.id);
                 self.render();
             }
         });

@@ -64,6 +64,7 @@ ff.Router = Backbone.Router.extend({
                         });
 
                     self._swapView(view);
+                    ff.router.navigate('/finder/' + model.id, { trigger: true });
                 },
                 error: function () {
                     ff.router.navigate('/finder', { trigger: true });
@@ -73,11 +74,13 @@ ff.Router = Backbone.Router.extend({
         else {
             ff.refs.fetch({
                 success: function () {
+                    model = ff.refs.first();
                     var view = new ff.Views.Finder({
-                            model: ff.refs.first()
+                            model: model
                         });
 
                     self._swapView(view);
+                    ff.router.navigate('/finder/' + model.id);
                 },
                 error: function () {
                     self.$rootEl.html('<img style="width:100%" draggable=false id="current-image" src="/static/images/failed_to_load.jpeg" />');
