@@ -36,7 +36,7 @@ def login():
 
     user = User.from_email(email)
 
-    if not user.active and not user.auth_level == 3:
+    if user and not user.active and not user.auth_level == 3:
         flash(u'Inactive User', 'danger')
         return redirect('/')
 

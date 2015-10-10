@@ -166,7 +166,6 @@ ff.Views.Finder = ff.Views.Base.extend({
             $('#app').css({ 'margin-top': $('nav').height() });
             self.finderWidth  = $('#current-image').width();
             self.finderHeight = $(window).height() - $('nav').height();
-            $('#fossil-finder').width(self.finderWidth);
             $('#fossil-finder').height(self.finderHeight);
             $('#inspector').height(self.finderHeight - 40);
 
