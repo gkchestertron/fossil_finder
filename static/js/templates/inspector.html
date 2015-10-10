@@ -11,6 +11,9 @@
                 <% var category = tag.get('category') %>
                 <div class="dropdown">
                     <h3 class="panel-title dropdown-toggle" data-toggle="dropdown">category: <%= category && category.name || 'unspecified' %></h3>
+                    <% if (category) { %>
+                    <img class="category-image pull-left" style="margin: 3px;" src="/static/images/<%= category.filename %>" />
+                    <% } %>
                     <ul class="dropdown-menu">
                         <% ff.categories.each(function (category) { %>
                         <li>

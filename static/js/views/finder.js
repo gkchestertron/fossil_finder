@@ -67,7 +67,7 @@ ff.Views.Finder = ff.Views.Base.extend({
         'wheel #current-image-wrapper': 'zoom',
         'mousedown #current-image' : 'drawNewTag', // uses image so click events don't bubble up and make new tags inside tags
         'mousemove #current-image-wrapper' : 'zoomNav',
-        'mouseenter .category-image': 'explodeCategoryImage'
+        'mouseenter a img.category-image': 'explodeCategoryImage'
     },
 
     explodeCategoryImage: function (event) {
