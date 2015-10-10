@@ -6,9 +6,9 @@
 <table class="table table-striped table-hover">
     <tbody>
     <% tags.each(function (tag) { %>
-    <tr class="<%= tag.active ? 'warning' : '' %>" data-tag-cid="<%= tag.cid %>">
+    <% var category = tag.get('category') %>
+    <tr class="<%= tag.active ? 'warning' : '' %> <%= !category ? 'danger' : '' %>" data-tag-cid="<%= tag.cid %>">
             <td>
-                <% var category = tag.get('category') %>
                 <div class="dropdown">
                     <h3 class="panel-title dropdown-toggle" data-toggle="dropdown">category: <%= category && category.name || 'unspecified' %></h3>
                     <% if (category) { %>
