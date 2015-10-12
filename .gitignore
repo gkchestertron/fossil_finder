@@ -7,3 +7,8 @@ static/.webassets-cache/*
 config.py
 
 !static/images/failed_to_load.jpeg
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
