@@ -19,14 +19,14 @@ def refs_get_many_preprocessor(search_params=None, **kw):
         user = None
 
     if user and user.active and user.auth_level > 1:
-        ref = Ref.query.filter(and_( Ref.completed_by_user_id == None, 
-                                     Ref.failed_to_load == None, 
+        ref = Ref.query.filter(and_( Ref.completed_by_user_id.is_(None),
+                                     Ref.failed_to_load.is_(None), 
                                      Ref.last_accessed_user_id != user.id)).first()
     else:
-        ref = Ref.query.filter(and_( Ref.last_accessed_date_time == None, Ref.failed_to_load == None)).first()
+        ref = Ref.query.filter(and_( Ref.last_accessed_date_time.is_(None), Ref.failed_to_load.is_(None))).first()
 
     if not ref: # creates a new ref based on first image that doesn't have a corresponding ref
-        img = Img.query.filter(Img.ref == None).first()
+        img = Img.query.filter(Img.ref.is_(None)).first()
         ref = Ref(seq_num = img.seq_num)
         try:
             db.session.add(ref)
