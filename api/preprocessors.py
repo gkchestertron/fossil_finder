@@ -12,7 +12,11 @@ def refs_get_many_preprocessor(search_params=None, **kw):
     if request.args.get('all'):
         return
 
-    user = User.from_token(session.get('token'))
+    token = session.get('token')
+    if token:
+        user = User.from_token(token)
+    else:
+        user = None
 
     if user and user.active and user.auth_level > 1:
         ref = Ref.query.filter(and_( Ref.completed_by_user_id == None, 
