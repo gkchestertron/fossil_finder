@@ -22,9 +22,13 @@
             <div id="navbar" class="navbar-collapse collapse">
               {% if current_user %}
               <ul class="nav navbar-nav navbar-right">
+                  {% if current_user.group_name and use_group %}
+                  <li><a href="#">{{current_user.group_name}}</a></li>
+                  {% else %}
                   <li><a href="#">{{current_user.email}}</a></li>
+                  {%  endif %}
                   <li><a target="_self" href="/logout">logout</a></li>
-                  {% if current_user.auth_level == 3 %}
+                  {% if current_user.auth_level == 3 and not use_group %}
                   <li><a target="_self" href="/admin">admin</a></li>
                   {% endif %}
               </ul>

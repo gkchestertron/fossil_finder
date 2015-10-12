@@ -26,9 +26,12 @@ class User(db.Model):
         return s.dumps({'id': self.id})
 
     def generate_password_hash(self, password):
-        password_hash = bcrypt.hashpw(password, bcrypt.gensalt())
-        self.password_hash = password_hash
-        db.session.commit()
+        try:
+            password_hash = bcrypt.hashpw(password, bcrypt.gensalt())
+            self.password_hash = password_hash
+            db.session.commit()
+        except:
+            db.session.rollback()
         
     def verify_password(self, password):
         return bcrypt.hashpw(password, self.password_hash) == self.password_hash and self.verified
@@ -38,9 +41,12 @@ class User(db.Model):
         g.current_user = self
 
     def verify(self):
-        self.verified = True
-        db.session.add(self)
-        db.session.commit()
+        try:
+            self.verified = True
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
 
     @classmethod
     def from_group_code(cls, group_code):
@@ -75,5 +81,3 @@ class User(db.Model):
         except:
             db.session.rollback()
             return None
-
-

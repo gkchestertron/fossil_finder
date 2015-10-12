@@ -29,6 +29,7 @@ def login():
         else:
             if user.active:
                 user.login()
+                session['use_group'] = True
             return redirect('/')
 
     if email is None or password is None:
@@ -44,6 +45,8 @@ def login():
         flash(u'Login Failed - Bad Email or Password', 'danger')
         return redirect('/')
     else:
+        if session.get('use_group'):
+            del session['use_group']
         flash(u'Login Successful - Welcome!', 'success')
         user.login()
         return redirect('/')

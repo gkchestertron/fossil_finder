@@ -17,9 +17,10 @@ app.config.from_object('config')
 @static.route('/finder/<id>')
 def index(id=None):
     current_user = None
+    use_group = session.get('use_group')
     if session.get('token'):
         current_user = User.from_token(session.get('token'))
-    return render_template("index.html", assets=assets, current_user=current_user)
+    return render_template("index.html", use_group=use_group, assets=assets, current_user=current_user)
 
 # templates for backbone
 @static.route('/templates')

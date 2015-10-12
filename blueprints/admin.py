@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, Blueprint, g, abort
+from flask import Flask, session, render_template, Blueprint, g, abort, redirect
 from functools import wraps
 from models import User
 
@@ -23,4 +23,6 @@ def is_admin(func):
 @admin.route('/admin/<path>')
 @is_admin
 def get_admin(path=None):
+    if session.get('use_group'):
+        return redirect('/')
     return render_template('admin.html', current_user=g.current_user)
