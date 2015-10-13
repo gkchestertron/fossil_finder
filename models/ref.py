@@ -12,3 +12,7 @@ class Ref(db.Model):
     scale                   = db.Column(db.Float)
     failed_to_load          = db.Column(db.Boolean)
  
+    def num_tags(self):
+        return len(self.tags)
+
+
