@@ -25,16 +25,17 @@ def refs_get_many_preprocessor(search_params=None, **kw):
     else:
         ref = Ref.query.filter(and_( Ref.last_accessed_date_time.is_(None), Ref.failed_to_load.is_(None))).first()
 
-    if not ref: # creates a new ref based on first image that doesn't have a corresponding ref
-        img = Img.query.filter(Img.ref.is_(None)).first()
-        ref = Ref(seq_num = img.seq_num)
+    while not ref:
         try:
+            img = Img.query.filter(~Img.seq_num.in_(Ref.query.with_entities(Ref.seq_num))).first()
+            ref = Ref(seq_num = img.seq_num)
             db.session.add(ref)
             db.session.commit()
         except:
+            ref = None
             db.session.rollback()
 
-    search_params['filters'] = [{ 'name': 'id', 'op': 'eq', 'val': ref.id }]
+    search_params['filters'] = [{ 'name': 'id', 'op': 'eq', 'val': int(ref.id) }]
 
 def logged_in(search_params=None, **kw):
     if not session.get('token'):

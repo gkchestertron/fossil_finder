@@ -7,9 +7,15 @@ from flask.ext.assets import Environment, Bundle
 from werkzeug import secure_filename
 import os
 
+
 # Create the Flask application
 application = Flask(__name__)
 application.config.from_object('config')
+
+# teardown db sessions
+@application.teardown_appcontext
+def shutdown_session(exception=None):
+        db.session.remove()
 
 # create any tables that don't yet exist
 db.create_all()

@@ -2,9 +2,9 @@ venv
 static/images/*
 static/build/*
 static/.webassets-cache/*
+config.py
 *.pyc
 *.swp
-config.py
 
 !static/images/failed_to_load.jpeg
 
