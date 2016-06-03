@@ -14,7 +14,9 @@ MAIL_USE_TLS = True
 MAIL_USE_SSL = False
 MAIL_USERNAME = ''
 MAIL_PASSWORD = ''
-APP_URL = 'http://localhost:5000/'
+# development app url
+# APP_URL = 'http://localhost:5000/'
+APP_URL = ''
 AUTH_LEVEL_NORMAL = 1
 AUTH_LEVEL_EXPERT = 2
 AUTH_LEVEL_ADMIN  = 3
