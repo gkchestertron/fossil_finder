@@ -1,10 +1,10 @@
 #TODO change __tablename__
 
-from db import db
+from db import db, app
 
 # class for images from existing db
 class Img(db.Model):
-    __tablename__ = 'img_fossil_project'
+    __tablename__ = app.config['IMG_TABLE_NAME']
     seq_num  = db.Column(db.Integer, primary_key = True)
     ref      = db.relationship('Ref', primaryjoin='Img.seq_num==foreign(Ref.seq_num)')
     imgnum   = db.Column(db.Integer)
