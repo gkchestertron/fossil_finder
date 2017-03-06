@@ -67,5 +67,29 @@
           {% endwith %}
         </nav>
         {% block body %}{% endblock %}
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header info">
+              <h4 class="modal-title" id="exampleModalLabel">Welcome</h4>
+            </div>
+            <div class="modal-body">
+              <p>Welcome to the fossil finder. Please login with code <strong>d3to2</strong> above on the left and click "Sign in" (no username or password required), or click "Signup".</p>
+              <p>Click and drag on the image to create a new tag. Then select its category on the right-hand panel. Scroll to zoom. Use the buttons at the bottom of the right-hand panel to move on to a new image.</p>
+              <p>To redisplay this message, just reload the page</p>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        $(document).ready(function () {
+          $('.modal').modal('show');
+        });
+      </script>
     </body>
 </html>
