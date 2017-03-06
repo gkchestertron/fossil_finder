@@ -5,6 +5,7 @@ static/.webassets-cache/*
 config.py
 *.pyc
 *.swp
+*.pem
 
 !static/images/failed_to_load.jpeg
 
