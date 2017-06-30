@@ -4,7 +4,7 @@ ff.Router = Backbone.Router.extend({
     },
 
     routes: {
-        ''           : 'finder',
+        ''           : 'home',
         'finder/:id' : 'finder',
         'finder'     : 'finder',
         'admin'      : 'admin',
@@ -87,5 +87,9 @@ ff.Router = Backbone.Router.extend({
                 }
             });
         } 
+    },
+
+    home: function () {
+
     }
 });
