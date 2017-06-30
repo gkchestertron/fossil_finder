@@ -5,6 +5,7 @@ ff.Router = Backbone.Router.extend({
 
     routes: {
         ''           : 'home',
+        '/'          : 'home',
         'finder/:id' : 'finder',
         'finder'     : 'finder',
         'admin'      : 'admin',
@@ -80,7 +81,7 @@ ff.Router = Backbone.Router.extend({
                         });
 
                     self._swapView(view);
-                    ff.router.navigate('/finder/' + model.id);
+                    ff.router.navigate('/finder/' + model.id, { replace: true });
                 },
                 error: function () {
                     self.$rootEl.html('<img style="width:100%" draggable=false id="current-image" src="/static/images/failed_to_load.jpeg" />');
@@ -90,6 +91,6 @@ ff.Router = Backbone.Router.extend({
     },
 
     home: function () {
-
+      this._swapView(new ff.Views.Home);
     }
 });

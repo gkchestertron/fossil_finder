@@ -47,6 +47,7 @@ js = Bundle(
     'js/views/finder.js',
     'js/views/tag.js',
     'js/views/admin.js',
+    'js/views/home.js',
     'js/router.js',
     output='build/packed.js'
 )
